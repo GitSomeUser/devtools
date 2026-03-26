@@ -22,7 +22,7 @@ The **Overnight Diary** is intentionally **idea → dollars**, not idea → list
 | 6 | $199 | `SQUARE_PAY_USD_199` |
 | donation | variable (buyer chooses in Square) | `SQUARE_PAY_DONATION` |
 
-**Committed references (public URLs):** `payment-links.json`, `automation/index.html`.
+**Committed references (public URLs):** `payment-links.json`, `automation/index.html`, `commits/index.html` (Commit Copy Deck — `usd_1`).
 
 **Secrets & local parity:** `cp .env.example .env` — fill **payment URLs** in `.env` for scripts; add **API keys / BTC receive (never private keys)** only here. `.env` is **gitignored**.
 
@@ -61,3 +61,10 @@ Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/h
 - **What:** Markdown **Ship Kit** — 12-step same-day list, paste-ready HTML blocks, tier picker. Source of truth for file content: **`~/clawd/overnight/paid-kit-usd15-v1.md`** (not shipped in public repo so the offer stays a real deliverable).
 - **How:** Buyer pays on Square → Master (or agent) emails the kit within **24 hours** using the one-line template in that file.
 - **On-page promise:** `/automation/` states the 24h email SLO; keep copy aligned with actual behavior.
+
+### SKU: `usd_1` (Commit Copy Deck) — fulfillment SLO
+
+- **What:** Markdown **Commit Copy Deck** — conventional commit lines, PR title formulas, one-line diff explainers, worksheet. Source of truth: **`~/clawd/overnight/commit-copy-deck-deliverable.md`** (private to Clawd; not the full paid body in the public repo).
+- **Landing + SEO:** `/commits/` on Pages — primary CTA → Square `usd_1` URL from `payment-links.json`.
+- **How:** Buyer pays on Square → email the deliverable file within **24 hours** to the address Square collects (same muscle as Ship Kit).
+- **Optional success URL:** `https://gitsomeuser.github.io/devtools/commits/?thanks=1` for on-page thanks strip.
