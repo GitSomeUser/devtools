@@ -8,7 +8,7 @@ Agents ship HTML, links, and copy **in this repo**; **Square** (your account) co
 
 ### Overnight loop alignment (`~/clawd/overnight/`)
 
-The **Overnight Diary** is intentionally **idea → dollars**, not idea → list. Iterations must include **distribution** (who sees the offer, where the pitch goes) and tie serious SKUs to a tier in **`payment-links.json`**. See **`~/clawd/overnight/OVERNIGHT_PURPOSE.md`**.
+The **Overnight Diary** is intentionally **idea → dollars**, not idea → list. With **`hour_runner.py --slot-sec 3600`**, each **hour** ends with **deploy · sell · distribute** closeout (`hour-close-i*.md`) and the **next hour starts a brand-new idea**. See **`~/clawd/overnight/OVERNIGHT_PURPOSE.md`**.
 
 ## Payment ladder (canonical)
 
