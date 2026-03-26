@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>automation funnel — iter 1</title>
-<meta name="description" content="Iteration 1: autonomous income rail template — replace payment href when SKU is live.">
+<meta name="description" content="Devtools funnel — checkout via Square Payment Link (href set in repo).">
 <link rel="canonical" href="https://gitsomeuser.github.io/devtools/automation/">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,17 +81,17 @@ ul { margin: 0.5rem 0 0 1.1rem; }
   <h1><span>automation</span> — income rail v0</h1>
 </header>
 <main>
-  <p class="lead">Shipped as <strong>Iteration 1</strong> after resetting the overnight loop. Agents own the HTML + deploy; Master owns payout accounts.</p>
+  <p class="lead"><strong>Devtools-only</strong> funnel: static page on GitHub Pages; checkout happens on <strong>Square</strong> via your Payment Link.</p>
 
-  <p class="note"><strong>Pre-revenue.</strong> Replace <code>PAYMENT_HREF</code> below with a real Stripe Payment Link, Gumroad, or LemonSqueezy URL. Until then this page is a <em>structural</em> asset (sitemap + hub link + canonical URL).</p>
+  <p class="note"><strong>Square.</strong> The button below must use your <strong>public Payment Link URL</strong> from Square Dashboard (see <code>AUTOMATION.md</code> in this repo). Do not put Square API secrets in HTML.</p>
 
   <section class="card">
     <h2>SKU (edit copy)</h2>
     <p><strong>Name:</strong> Automation starter — funnel template + architecture doc</p>
-    <p><strong>Price:</strong> (set in your payment provider)</p>
-    <p><strong>You get:</strong> This hosted landing pattern, links to repo architecture, and a checklist for webhook fulfillment (next iterations).</p>
-    <a class="cta" id="pay" href="#">PAYMENT_HREF — replace before launch</a>
-    <p style="margin-top:0.75rem"><strong>Success redirect:</strong> <code>https://gitsomeuser.github.io/devtools/automation/?thanks=1</code> (optional; configure in provider)</p>
+    <p><strong>Price:</strong> Set in Square when you create the Payment Link.</p>
+    <p><strong>You get:</strong> Whatever you define in Square + any fulfillment you describe on this page.</p>
+    <a class="cta" id="pay" href="#">Paste Square Payment Link URL → set this href</a>
+    <p style="margin-top:0.75rem"><strong>Optional redirect after pay:</strong> <code>https://gitsomeuser.github.io/devtools/automation/?thanks=1</code> (if Square offers a success URL)</p>
   </section>
 
   <section class="card">
@@ -102,14 +102,14 @@ ul { margin: 0.5rem 0 0 1.1rem; }
   <section class="card">
     <h2>Checklist for Master (one-time)</h2>
     <ul>
-      <li>Create product in payment provider; drop URL into <code>href</code> for <code>#pay</code>.</li>
+      <li>Square Dashboard → create <strong>Payment link</strong> → copy link → set <code>href</code> on <code>#pay</code> (or paste link in chat for agent commit).</li>
       <li>Confirm bank / tax settings so funds actually settle.</li>
       <li>Add Search Console property for <code>gitsomeuser.github.io/devtools/</code> when ready.</li>
     </ul>
   </section>
 </main>
 <footer>
-  System doctrine: <code>~/clawd/AUTOMATION_ARCHITECTURE.md</code> · Repo: <code>GitSomeUser/devtools</code>
+  Project scope: <code>AUTOMATION.md</code> · Repo: <code>GitSomeUser/devtools</code>
 </footer>
 </body>
 </html>
