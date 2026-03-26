@@ -6,6 +6,10 @@
 
 Agents ship HTML, links, and copy **in this repo**; **Square** (your account) collects payment via **Payment Links**. Master supplies the **public checkout URL** only — never API secrets in the repo or in chat.
 
+### Overnight loop alignment (`~/clawd/overnight/`)
+
+The **Overnight Diary** is intentionally **idea → dollars**, not idea → list. Iterations must include **distribution** (who sees the offer, where the pitch goes) and tie serious SKUs to a tier in **`payment-links.json`**. See **`~/clawd/overnight/OVERNIGHT_PURPOSE.md`**.
+
 ## Payment ladder (canonical)
 
 | Tier | Amount | `.env` key |
