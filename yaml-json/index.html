@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML ↔ JSON Converter — Free Online Tool</title>
+<meta name="description" content="Convert between YAML and JSON instantly. Free, private, runs entirely in your browser. No data sent to any server.">
+<meta name="keywords" content="yaml to json, json to yaml, yaml converter, json converter, online yaml tool">
+<link rel="canonical" href="https://gitsomeuser.github.io/devtools/yaml-json/">
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #71717a;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --success: #22c55e;
+  --error: #ef4444;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+header h1 span { color: var(--accent); }
+
+.badge {
+  font-size: 0.7rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2rem;
+  gap: 1rem;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover { border-color: var(--accent); color: var(--accent-hover); }
+.btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.btn-swap {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+}
+.btn-swap:hover { background: var(--accent); color: #fff; }
+
+.editors {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .editors { grid-template-columns: 1fr; min-height: auto; }
+  main { padding: 1rem; }
+  header { padding: 1rem; }
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.copy-btn {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+.copy-btn:hover { color: var(--text); border-color: var(--text); }
+.copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+textarea {
+  flex: 1;
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+}
+
+textarea::placeholder { color: var(--muted); }
+
+.status {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.status.error { color: var(--error); }
+.status.ok { color: var(--success); }
+
+footer {
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+.info {
+  max-width: 800px;
+  margin: 1rem auto;
+  padding: 0 2rem 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.info h2 { color: var(--text); font-size: 1rem; margin: 1.5rem 0 0.5rem; }
+.info p { margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>YAML</span> ↔ <span>JSON</span> Converter</h1>
+  <span class="badge">runs locally — no data leaves your browser</span>
+</header>
+
+<main>
+  <div class="controls">
+    <button class="btn active" id="btn-yaml-json" onclick="setMode('y2j')">YAML → JSON</button>
+    <button class="btn-swap btn" onclick="swapPanes()">⇄ Swap</button>
+    <button class="btn" id="btn-json-yaml" onclick="setMode('j2y')">JSON → YAML</button>
+    <button class="btn" onclick="clearAll()">Clear</button>
+    <button class="btn" onclick="prettify()">Prettify</button>
+    <button class="btn" id="btn-minify" onclick="minify()">Minify JSON</button>
+  </div>
+
+  <div class="editors">
+    <div class="editor-pane">
+      <div class="editor-header">
+        <span id="input-label">YAML Input</span>
+        <button class="copy-btn" onclick="copyText('input')">Copy</button>
+      </div>
+      <textarea id="input" placeholder="Paste your YAML here..." spellcheck="false"></textarea>
+      <div class="status" id="input-status">&nbsp;</div>
+    </div>
+    <div class="editor-pane">
+      <div class="editor-header">
+        <span id="output-label">JSON Output</span>
+        <button class="copy-btn" onclick="copyText('output')">Copy</button>
+      </div>
+      <textarea id="output" placeholder="Converted output will appear here..." readonly spellcheck="false"></textarea>
+      <div class="status" id="output-status">&nbsp;</div>
+    </div>
+  </div>
+</main>
+
+<section class="info">
+  <h2>About This Tool</h2>
+  <p>Convert between YAML and JSON formats instantly. Everything runs in your browser — no data is sent to any server. Your input stays private.</p>
+  <h2>Features</h2>
+  <p>Real-time conversion as you type. Prettify and minify JSON output. Syntax error highlighting with line numbers. Supports nested objects, arrays, multi-line strings, and all standard YAML/JSON features.</p>
+  <h2>When to Use</h2>
+  <p>Converting Kubernetes manifests to JSON for API calls. Transforming JSON API responses to human-readable YAML configs. Validating YAML syntax before committing to a repo. Quick format switching during development.</p>
+</section>
+
+<footer>
+  Built by <a href="https://github.com/GitSomeUser">GitSomeUser</a> · Open Source · No tracking · No ads
+</footer>
+
+<script>
+let mode = 'y2j';
+const $input = document.getElementById('input');
+const $output = document.getElementById('output');
+const $inputStatus = document.getElementById('input-status');
+const $outputStatus = document.getElementById('output-status');
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-yaml-json').classList.toggle('active', m === 'y2j');
+  document.getElementById('btn-json-yaml').classList.toggle('active', m === 'j2y');
+  document.getElementById('input-label').textContent = m === 'y2j' ? 'YAML Input' : 'JSON Input';
+  document.getElementById('output-label').textContent = m === 'y2j' ? 'JSON Output' : 'YAML Output';
+  document.getElementById('btn-minify').textContent = m === 'y2j' ? 'Minify JSON' : 'Minify';
+  convert();
+}
+
+function swapPanes() {
+  const outText = $output.value;
+  $output.value = '';
+  $input.value = outText;
+  setMode(mode === 'y2j' ? 'j2y' : 'y2j');
+}
+
+function clearAll() {
+  $input.value = '';
+  $output.value = '';
+  $inputStatus.innerHTML = '&nbsp;';
+  $outputStatus.innerHTML = '&nbsp;';
+  $inputStatus.className = 'status';
+  $outputStatus.className = 'status';
+}
+
+function convert() {
+  const src = $input.value.trim();
+  if (!src) {
+    $output.value = '';
+    $inputStatus.innerHTML = '&nbsp;';
+    $outputStatus.innerHTML = '&nbsp;';
+    $inputStatus.className = 'status';
+    return;
+  }
+  try {
+    const t0 = performance.now();
+    let result;
+    if (mode === 'y2j') {
+      const parsed = jsyaml.load(src);
+      result = JSON.stringify(parsed, null, 2);
+    } else {
+      const parsed = JSON.parse(src);
+      result = jsyaml.dump(parsed, { indent: 2, lineWidth: 120, noRefs: true });
+    }
+    const ms = (performance.now() - t0).toFixed(1);
+    $output.value = result;
+    $inputStatus.textContent = `Valid ${mode === 'y2j' ? 'YAML' : 'JSON'}`;
+    $inputStatus.className = 'status ok';
+    const lines = result.split('\n').length;
+    const bytes = new Blob([result]).size;
+    $outputStatus.textContent = `${lines} lines · ${formatBytes(bytes)} · ${ms}ms`;
+    $outputStatus.className = 'status ok';
+  } catch (e) {
+    $output.value = '';
+    $inputStatus.textContent = `Error: ${e.message}`;
+    $inputStatus.className = 'status error';
+    $outputStatus.innerHTML = '&nbsp;';
+    $outputStatus.className = 'status';
+  }
+}
+
+function prettify() {
+  if (mode === 'y2j' && $output.value) {
+    try {
+      $output.value = JSON.stringify(JSON.parse($output.value), null, 2);
+    } catch(e) {}
+  }
+  if (mode === 'j2y') {
+    try {
+      $input.value = JSON.stringify(JSON.parse($input.value), null, 2);
+      convert();
+    } catch(e) {}
+  }
+}
+
+function minify() {
+  if (mode === 'y2j' && $output.value) {
+    try {
+      $output.value = JSON.stringify(JSON.parse($output.value));
+      const bytes = new Blob([$output.value]).size;
+      $outputStatus.textContent = `1 line · ${formatBytes(bytes)} · minified`;
+    } catch(e) {}
+  }
+}
+
+function copyText(which) {
+  const el = document.getElementById(which);
+  navigator.clipboard.writeText(el.value).then(() => {
+    const btn = el.closest('.editor-pane').querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
+
+$input.addEventListener('input', convert);
+
+$input.addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = this.selectionStart, end = this.selectionEnd;
+    this.value = this.value.substring(0, s) + '  ' + this.value.substring(end);
+    this.selectionStart = this.selectionEnd = s + 2;
+    convert();
+  }
+});
+
+$input.value = `# Example YAML — try editing!\nserver:\n  host: localhost\n  port: 8080\n  ssl: true\n\ndatabase:\n  engine: postgresql\n  name: myapp_prod\n  replicas:\n    - host: db-read-1\n      port: 5432\n    - host: db-read-2\n      port: 5432\n\nfeatures:\n  - name: dark-mode\n    enabled: true\n    rollout: 0.75\n  - name: new-dashboard\n    enabled: false`;
+convert();
+</script>
+</body>
+</html>
