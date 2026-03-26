@@ -81,18 +81,54 @@ p.lead { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
 .cta.donate { background: var(--donate); color: #eef; }
 code { font-size: 0.8em; background: #0a0c10; padding: 0.15em 0.35em; border-radius: 4px; }
 footer { padding: 2rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+.thanks-banner {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid var(--accent);
+  color: #bbf7d0;
+  padding: 0.9rem 1.25rem;
+  margin: 0 2rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  max-width: 44rem;
+}
+.thanks-banner[hidden] { display: none !important; }
 </style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "devtools — checkout tiers",
-  "description": "Square payment links for devtools ladder and donation.",
-  "url": "https://gitsomeuser.github.io/devtools/automation/"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gitsomeuser.github.io/devtools/automation/#page",
+      "name": "devtools — checkout",
+      "description": "Square payment links USD $1–$199 plus donation.",
+      "url": "https://gitsomeuser.github.io/devtools/automation/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "devtools",
+        "url": "https://gitsomeuser.github.io/devtools/"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "name": "devtools Square checkout tiers",
+      "numberOfItems": 7,
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "item": {"@type": "Product", "name": "devtools — $1", "description": "micro / thank-you", "offers": {"@type": "Offer", "price": "1.00", "priceCurrency": "USD", "url": "https://square.link/u/dbNxotcN", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 2, "item": {"@type": "Product", "name": "devtools — $5", "description": "tip / small unlock", "offers": {"@type": "Offer", "price": "5.00", "priceCurrency": "USD", "url": "https://square.link/u/PtNcSZna", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 3, "item": {"@type": "Product", "name": "devtools — $15", "description": "single deliverable", "offers": {"@type": "Offer", "price": "15.00", "priceCurrency": "USD", "url": "https://square.link/u/vrnZ4R19", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 4, "item": {"@type": "Product", "name": "devtools — $35", "description": "kit / bundle", "offers": {"@type": "Offer", "price": "35.00", "priceCurrency": "USD", "url": "https://square.link/u/d8Hz3Y7d", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 5, "item": {"@type": "Product", "name": "devtools — $79", "description": "pro", "offers": {"@type": "Offer", "price": "79.00", "priceCurrency": "USD", "url": "https://square.link/u/qon190ju", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 6, "item": {"@type": "Product", "name": "devtools — $199", "description": "anchor / premium", "offers": {"@type": "Offer", "price": "199.00", "priceCurrency": "USD", "url": "https://square.link/u/eHyzQOeb", "availability": "https://schema.org/InStock"}}},
+        {"@type": "ListItem", "position": 7, "item": {"@type": "Product", "name": "devtools — donation", "description": "amount chosen at Square checkout", "offers": {"@type": "Offer", "priceCurrency": "USD", "url": "https://square.link/u/7B1EWkBj", "availability": "https://schema.org/InStock", "description": "Variable amount"}}}
+      ]
+    }
+  ]
 }
 </script>
 </head>
 <body>
+<div id="thanks-banner" class="thanks-banner" hidden>Thanks — if you paid on Square, your receipt comes from Square. Fulfillment (if any) matches what we list for the tier you chose.</div>
 <header>
   <h1><span>devtools</span> — checkout</h1>
 </header>
@@ -127,5 +163,15 @@ footer { padding: 2rem; color: var(--muted); font-size: 0.78rem; border-top: 1px
 <footer>
   Config: <code>.env</code> (local) · <code>payment-links.json</code> (repo) · <code>AUTOMATION.md</code>
 </footer>
+<script>
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get('thanks') === '1') {
+      var el = document.getElementById('thanks-banner');
+      if (el) el.removeAttribute('hidden');
+    }
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>
