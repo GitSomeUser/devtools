@@ -30,13 +30,12 @@ When a Square link **changes**, update **`.env`**, **`payment-links.json`**, and
 
 **Do not** commit Square **Application Secret**, **Access Token**, or **Refresh Token**.
 
-## Optional: after payment
+## Fulfillment — $15 Ship Kit
 
-If Square offers **redirect after payment**, you can point buyers at:
-
-`https://gitsomeuser.github.io/devtools/automation/?thanks=1`
-
-(Add a small “thanks” banner later if you want.)
+- **Product:** `docs/SHIP-KIT.md` (12-step checklist + paste-ready HTML).
+- **Overview page:** `/ship-kit/` for buyers who want a short summary before Square.
+- **SLO:** Email the buyer (address from Square) within **24h** with link to the repo path or raw GitHub URL.
+- **Optional after pay:** Square success URL → `https://gitsomeuser.github.io/devtools/automation/?thanks=1` (thanks strip on-page).
 
 ## Continuity (Clawd)
 
@@ -56,3 +55,9 @@ Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/h
 1. Traffic → `https://gitsomeuser.github.io/devtools/` and `/automation/`.
 2. Conversion → **Square Payment Links** (tier buttons on `/automation/`).
 3. Fulfillment — document in repo (file download, email via Square, or manual) as you define the SKU.
+
+### SKU: `usd_15` (Ship Kit) — fulfillment SLO
+
+- **What:** Markdown **Ship Kit** — 12-step same-day list, paste-ready HTML blocks, tier picker. Source of truth for file content: **`~/clawd/overnight/paid-kit-usd15-v1.md`** (not shipped in public repo so the offer stays a real deliverable).
+- **How:** Buyer pays on Square → Master (or agent) emails the kit within **24 hours** using the one-line template in that file.
+- **On-page promise:** `/automation/` states the 24h email SLO; keep copy aligned with actual behavior.
