@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>automation funnel — iter 1</title>
-<meta name="description" content="Devtools funnel — checkout via Square Payment Link (href set in repo).">
+<title>Pay — devtools</title>
+<meta name="description" content="Square checkout tiers for devtools: $1–$199 + donation.">
 <link rel="canonical" href="https://gitsomeuser.github.io/devtools/automation/">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,6 +15,7 @@
   --text: #e4e4e7;
   --muted: #71717a;
   --accent: #22c55e;
+  --donate: #6366f1;
   --warn: #f59e0b;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -31,7 +32,7 @@ header {
 }
 header h1 { font-size: 1.25rem; font-weight: 600; }
 header h1 span { color: var(--accent); }
-main { max-width: 40rem; padding: 2rem; }
+main { max-width: 44rem; padding: 2rem; }
 p.lead { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
 .note {
   background: rgba(245, 158, 11, 0.1);
@@ -49,67 +50,82 @@ p.lead { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
   padding: 1.25rem;
   margin-bottom: 1rem;
 }
-.card h2 { font-size: 1rem; margin-bottom: 0.5rem; }
-.card p, .card li { color: var(--muted); font-size: 0.88rem; }
+.card h2 { font-size: 1rem; margin-bottom: 0.75rem; }
+.tiers {
+  display: grid;
+  gap: 0.65rem;
+}
+.tier {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #0a0c10;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.tier span { color: var(--muted); font-size: 0.85rem; }
 .cta {
   display: inline-block;
-  margin-top: 0.75rem;
-  padding: 0.65rem 1.25rem;
+  padding: 0.55rem 1rem;
   background: var(--accent);
   color: #052e16;
   font-weight: 600;
   border-radius: 6px;
   text-decoration: none;
+  font-size: 0.88rem;
 }
 .cta:hover { filter: brightness(1.08); }
+.cta.donate { background: var(--donate); color: #eef; }
 code { font-size: 0.8em; background: #0a0c10; padding: 0.15em 0.35em; border-radius: 4px; }
 footer { padding: 2rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 2rem; }
-ul { margin: 0.5rem 0 0 1.1rem; }
 </style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "devtools automation funnel template",
-  "description": "Iteration 1 template for attaching a payment link and fulfillment URL.",
+  "name": "devtools — checkout tiers",
+  "description": "Square payment links for devtools ladder and donation.",
   "url": "https://gitsomeuser.github.io/devtools/automation/"
 }
 </script>
 </head>
 <body>
 <header>
-  <h1><span>automation</span> — income rail v0</h1>
+  <h1><span>devtools</span> — checkout</h1>
 </header>
 <main>
-  <p class="lead"><strong>Devtools-only</strong> funnel: static page on GitHub Pages; checkout happens on <strong>Square</strong> via your Payment Link.</p>
+  <p class="lead">All prices are set in <strong>Square</strong>; you complete purchase on Square’s hosted checkout. Tiers map to our standard <strong>$1 → $199</strong> ladder for future products.</p>
 
-  <p class="note"><strong>Square.</strong> The button below must use your <strong>public Payment Link URL</strong> from Square Dashboard (see <code>AUTOMATION.md</code> in this repo). Do not put Square API secrets in HTML.</p>
+  <p class="note"><strong>Public links only.</strong> API keys and wallet seeds stay in <code>.env</code> (local, gitignored) — never in this HTML. Canonical list for scripts: <code>payment-links.json</code> at repo root.</p>
 
   <section class="card">
-    <h2>SKU (edit copy)</h2>
-    <p><strong>Name:</strong> Automation starter — funnel template + architecture doc</p>
-    <p><strong>Price:</strong> Set in Square when you create the Payment Link.</p>
-    <p><strong>You get:</strong> Whatever you define in Square + any fulfillment you describe on this page.</p>
-    <a class="cta" id="pay" href="#">Paste Square Payment Link URL → set this href</a>
-    <p style="margin-top:0.75rem"><strong>Optional redirect after pay:</strong> <code>https://gitsomeuser.github.io/devtools/automation/?thanks=1</code> (if Square offers a success URL)</p>
+    <h2>Standard tiers</h2>
+    <div class="tiers" id="tiers">
+      <div class="tier"><span>$1 — micro / thank-you</span><a class="cta" href="https://square.link/u/dbNxotcN">Pay $1</a></div>
+      <div class="tier"><span>$5 — tip / small unlock</span><a class="cta" href="https://square.link/u/PtNcSZna">Pay $5</a></div>
+      <div class="tier"><span>$15 — single deliverable</span><a class="cta" href="https://square.link/u/vrnZ4R19">Pay $15</a></div>
+      <div class="tier"><span>$35 — kit / bundle</span><a class="cta" href="https://square.link/u/d8Hz3Y7d">Pay $35</a></div>
+      <div class="tier"><span>$79 — pro</span><a class="cta" href="https://square.link/u/qon190ju">Pay $79</a></div>
+      <div class="tier"><span>$199 — anchor / premium</span><a class="cta" href="https://square.link/u/eHyzQOeb">Pay $199</a></div>
+    </div>
   </section>
 
   <section class="card">
-    <h2>Analytics slot</h2>
-    <p>Paste Plausible, Fathom, or GA snippet in this file when IDs exist. Iteration metric until checkout works: <strong>landing page 200 + time-on-page</strong>.</p>
-    </section>
+    <h2>Donation</h2>
+    <p style="color:var(--muted);font-size:0.88rem;margin-bottom:0.75rem">Suggested amounts only; buyer chooses in Square.</p>
+    <a class="cta donate" href="https://square.link/u/7B1EWkBj">Donate (variable amount)</a>
+  </section>
 
   <section class="card">
-    <h2>Checklist for Master (one-time)</h2>
-    <ul>
-      <li>Square Dashboard → create <strong>Payment link</strong> → copy link → set <code>href</code> on <code>#pay</code> (or paste link in chat for agent commit).</li>
-      <li>Confirm bank / tax settings so funds actually settle.</li>
-      <li>Add Search Console property for <code>gitsomeuser.github.io/devtools/</code> when ready.</li>
-    </ul>
+    <h2>After payment</h2>
+    <p style="color:var(--muted);font-size:0.88rem">If Square allows a success URL, you can use <code>https://gitsomeuser.github.io/devtools/automation/?thanks=1</code>.</p>
   </section>
 </main>
 <footer>
-  Project scope: <code>AUTOMATION.md</code> · Repo: <code>GitSomeUser/devtools</code>
+  Config: <code>.env</code> (local) · <code>payment-links.json</code> (repo) · <code>AUTOMATION.md</code>
 </footer>
 </body>
 </html>

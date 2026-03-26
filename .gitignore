@@ -1,0 +1,6 @@
+# Local secrets — never push
+.env
+.env.local
+.env.*.local
+*.pem
+*.key

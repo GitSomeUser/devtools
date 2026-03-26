@@ -6,17 +6,25 @@
 
 Agents ship HTML, links, and copy **in this repo**; **Square** (your account) collects payment via **Payment Links**. Master supplies the **public checkout URL** only — never API secrets in the repo or in chat.
 
-## Square Payment Link — what Master does
+## Payment ladder (canonical)
 
-1. Log into **Square Dashboard** (the account that receives deposits).
-2. Go to **Online Checkout** or **Payment links** (wording varies by Square UI generation).
-3. **Create** a payment link: name, description, price, tax if needed.
-4. Publish/copy the **customer-facing link** (starts with `https://` — often `checkout.square.site` or similar).
-5. **Paste that URL** in one of two ways:
-   - **Preferred:** Paste it in chat or drop it here so it can be wired into `automation/index.html` (`#pay` `href`), **or**
-   - Edit `automation/index.html` yourself: set `<a id="pay" href="YOUR_LINK_HERE">`.
+| Tier | Amount | `.env` key |
+|------|--------|------------|
+| 1 | $1 | `SQUARE_PAY_USD_1` |
+| 2 | $5 | `SQUARE_PAY_USD_5` |
+| 3 | $15 | `SQUARE_PAY_USD_15` |
+| 4 | $35 | `SQUARE_PAY_USD_35` |
+| 5 | $79 | `SQUARE_PAY_USD_79` |
+| 6 | $199 | `SQUARE_PAY_USD_199` |
+| donation | variable (buyer chooses in Square) | `SQUARE_PAY_DONATION` |
 
-**Do not** paste Square **Application Secret**, **Access Token**, **Refresh Token**, or location secrets. The **payment link URL** is public by design (same as sharing the link with a buyer).
+**Committed references (public URLs):** `payment-links.json`, `automation/index.html`.
+
+**Secrets & local parity:** `cp .env.example .env` — fill **payment URLs** in `.env` for scripts; add **API keys / BTC receive (never private keys)** only here. `.env` is **gitignored**.
+
+When a Square link **changes**, update **`.env`**, **`payment-links.json`**, and **`automation/index.html`** together.
+
+**Do not** commit Square **Application Secret**, **Access Token**, or **Refresh Token**.
 
 ## Optional: after payment
 
@@ -34,7 +42,7 @@ If Square offers **redirect after payment**, you can point buyers at:
 ## What “done” means per iteration (devtools)
 
 1. **Shipped** on `main` with a live Pages URL, **or**
-2. **Money rail:** real **`href`** on `#pay` (Square link), **or**
+2. **Money rail:** Square tier **`href`s** live on `/automation/` + `payment-links.json`, **or**
 3. **Measurement:** analytics/snippet slot filled with a real ID.
 
 Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/hour_runner.py` (not global editor rules).
@@ -42,5 +50,5 @@ Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/h
 ## Money-flow (this project)
 
 1. Traffic → `https://gitsomeuser.github.io/devtools/` and `/automation/`.
-2. Conversion → **Square Payment Link** (`#pay`).
+2. Conversion → **Square Payment Links** (tier buttons on `/automation/`).
 3. Fulfillment — document in repo (file download, email via Square, or manual) as you define the SKU.
