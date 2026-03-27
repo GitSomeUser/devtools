@@ -10,6 +10,8 @@ Agents ship HTML, links, and copy **in this repo**; **Square** (your account) co
 
 The **Overnight Diary** is intentionally **idea → dollars**, not idea → list. With **`hour_runner.py --slot-sec 3600`**, each **hour** ends with **deploy · sell · distribute** closeout (`hour-close-i*.md`) and the **next hour starts a brand-new idea**. See **`~/clawd/overnight/OVERNIGHT_PURPOSE.md`**.
 
+**Lifecycle:** Curated buyer-facing SKUs graduate to **`/pipeline/`** (GitHub Pages: `…/devtools/pipeline/`) as **Possible Pipeline** work; long term, **Alive Management** means real customers and support. Canonical doc: **`docs/TEAM-LIFECYCLE.md`**. Internal pointer: **`~/clawd/TEAM-PURPOSE.md`**.
+
 ## Payment ladder (canonical)
 
 | Tier | Amount | `.env` key |
@@ -68,3 +70,11 @@ Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/h
 - **Landing + SEO:** `/commits/` on Pages — primary CTA → Square `usd_1` URL from `payment-links.json`.
 - **How:** Buyer pays on Square → email the deliverable file within **24 hours** to the address Square collects (same muscle as Ship Kit).
 - **Optional success URL:** `https://gitsomeuser.github.io/devtools/commits/?thanks=1` for on-page thanks strip.
+
+### SKU: `usd_5` (Weekend Ship Gate) — fulfillment SLO
+
+- **What:** Markdown **full pack** — expanded twelve-gate checklist, stall detector worksheet (score + interpretation), one-paragraph offer template, copy-paste **Notion** toggle/callout block. Source of truth: **`~/clawd/overnight/weekend-gate-usd5-v1.md`** (private to Clawd; not the paid body in the public repo).
+- **Landing + SEO:** `/weekend-gate/` on Pages — public five yes/no gates as teaser; primary CTA → Square `usd_5` URL from `payment-links.json` (`https://square.link/u/PtNcSZna`).
+- **How:** Buyer pays on Square → email the deliverable file (or raw attachment / gist link) within **24 hours** to the address Square collects.
+- **Optional success URL:** `https://gitsomeuser.github.io/devtools/weekend-gate/?thanks=1` for on-page thanks strip.
+- **On-page promise:** The landing states the 24h email SLO; keep fulfillment copy aligned with `AUTOMATION.md` and actual behavior.

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Possible Pipeline — curated SKUs</title>
+<meta name="description" content="Curated micro-offers from Overnight Diary experiments: Square checkout, clear scope, moving toward polish and distribution.">
+<link rel="canonical" href="https://gitsomeuser.github.io/devtools/pipeline/">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #a1a1aa;
+  --accent: #22c55e;
+  --link: #6366f1;
+  --warn: #f59e0b;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+body { font-family: var(--font-sans); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 1.2rem; font-weight: 600; }
+header h1 span { color: var(--accent); }
+main { max-width: 46rem; padding: 2rem; }
+.lead { color: var(--muted); margin-bottom: 1.25rem; font-size: 0.95rem; }
+.phase { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--muted); }
+.phase strong { color: var(--text); }
+.note-warn {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid var(--warn);
+  color: #fde68a;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+.sku {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.sku h2 { font-size: 1rem; margin-bottom: 0.35rem; color: var(--text); }
+.sku .meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+.sku p { color: var(--muted); font-size: 0.88rem; margin-bottom: 0.65rem; }
+.sku a.pay {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #052e16;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+.sku a.pay:hover { filter: brightness(1.06); }
+.sku a.secondary { color: var(--link); font-size: 0.85rem; margin-left: 0.75rem; }
+footer { padding: 2rem; border-top: 1px solid var(--border); margin-top: 1rem; font-size: 0.8rem; color: var(--muted); }
+footer a { color: var(--link); }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Possible Pipeline — curated SKUs",
+  "description": "Micro-offers curated from Overnight Diary experiments with Square checkout.",
+  "url": "https://gitsomeuser.github.io/devtools/pipeline/",
+  "isPartOf": { "@type": "WebSite", "name": "devtools", "url": "https://gitsomeuser.github.io/devtools/" }
+}
+</script>
+</head>
+<body>
+<header>
+  <h1><span>Possible Pipeline</span> — library</h1>
+</header>
+<main>
+  <p class="lead">These offers were shaped in the <strong>Overnight Diary</strong> phase. They live here as the team’s <strong>Possible Pipeline</strong>: real checkout links, clear “what you get,” next step is polish + distribution + support until they reach <strong>Alive Management</strong> (paying customers you engage with).</p>
+
+  <div class="phase">
+    <strong>Overnight Diary</strong> → experiments &amp; drafts (<code>~/clawd/overnight/</code>)<br>
+    <strong>Possible Pipeline</strong> → this page + outbound + iteration<br>
+    <strong>Alive Management</strong> → customers, feedback, support
+  </div>
+
+  <p class="note-warn"><strong>Shared tier note:</strong> Multiple SKUs use the same Square link when the <strong>price matches</strong> (<strong>$35</strong> and <strong>$15</strong> each share one link today). At checkout, put the <strong>exact SKU title</strong> in the memo and repeat it in your fulfillment email. Long-term: <strong>one Square Payment Link per SKU</strong> for clean accounting.</p>
+
+  <section class="sku" id="iter-17">
+    <h2>17 — No-Show Salvage SMS Pack</h2>
+    <p class="meta">Overnight iteration 17 · $15 · <code>usd_15</code></p>
+    <p>For people who run appointments and lose money to no-shows. Copy-paste texts + timing ideas to recover bookings.</p>
+    <a class="pay" href="https://square.link/u/vrnZ4R19">Pay $15 on Square</a>
+    <a class="secondary" href="https://github.com/GitSomeUser/devtools/blob/main/docs/TEAM-LIFECYCLE.md">Team lifecycle (repo)</a>
+  </section>
+
+  <section class="sku" id="iter-16">
+    <h2>16 — Founder Call Debrief Pack (24h)</h2>
+    <p class="meta">Overnight iteration 16 · $35 · <code>usd_35</code></p>
+    <p>After a sales or discovery call: turn messy notes into a clean debrief, follow-up messages, and objection map—fixed scope, fast turnaround.</p>
+    <a class="pay" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a><span class="secondary">(note SKU at checkout)</span>
+  </section>
+
+  <section class="sku" id="iter-18">
+    <h2>18 — Google Review Recovery Cards (same-day)</h2>
+    <p class="meta">Overnight iteration 18 · $35 · <code>usd_35</code></p>
+    <p>For local businesses with a fresh bad review: response variants (public, private, escalation) you can adapt fast.</p>
+    <a class="pay" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a><span class="secondary">(note SKU at checkout)</span>
+  </section>
+
+  <section class="sku" id="iter-13">
+    <h2>13 — Cold Homepage Teardown (24h)</h2>
+    <p class="meta">Overnight iteration 13 · $35 · <code>usd_35</code></p>
+    <p>For sites getting traffic but not converting: structured homepage teardown and concrete change list.</p>
+    <a class="pay" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a><span class="secondary">(note SKU at checkout)</span>
+  </section>
+
+  <section class="sku" id="iter-14">
+    <h2>14 — Inbox Triage Strike (48h)</h2>
+    <p class="meta">Overnight iteration 14 · $79 · <code>usd_79</code></p>
+    <p>Warm leads stalling in the inbox: triage map, send-ready replies, short follow-up plan.</p>
+    <a class="pay" href="https://square.link/u/qon190ju">Pay $79 on Square</a>
+  </section>
+
+  <section class="sku" id="iter-10">
+    <h2>10 — One-Day Offer Stress Test</h2>
+    <p class="meta">Overnight iteration 10 · $199 · <code>usd_199</code></p>
+    <p>High-trust audit: stress-test one offer (headline, promise, scope, objection handling) in a fixed window—best for owners ready to pay for blunt feedback.</p>
+    <a class="pay" href="https://square.link/u/eHyzQOeb">Pay $199 on Square</a>
+  </section>
+
+  <section class="sku" id="iter-11">
+    <h2>11 — Reply Rescue Pack</h2>
+    <p class="meta">Overnight iteration 11 · $35 · <code>usd_35</code></p>
+    <p>When replies are late and warm leads cool off: rescue pack of reply patterns and a short execution checklist.</p>
+    <a class="pay" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a><span class="secondary">(note SKU at checkout)</span>
+  </section>
+
+  <section class="sku" id="iter-12">
+    <h2>12 — Objection Crusher Voice Notes</h2>
+    <p class="meta">Overnight iteration 12 · $15 · <code>usd_15</code></p>
+    <p>Quick audio-style turnaround (delivered as written notes/scripts) to handle common objections before they kill the deal.</p>
+    <a class="pay" href="https://square.link/u/vrnZ4R19">Pay $15 on Square</a><span class="secondary">(note SKU at checkout)</span>
+  </section>
+
+</main>
+<footer>
+  <p><a href="../">← devtools hub</a> · <a href="../automation/">Automation rail</a> · <a href="https://github.com/GitSomeUser/devtools">GitHub</a></p>
+  <p>Lifecycle doc: <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/TEAM-LIFECYCLE.md">docs/TEAM-LIFECYCLE.md</a></p>
+</footer>
+</body>
+</html>
