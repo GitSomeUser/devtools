@@ -16,7 +16,7 @@ Use this in order. Check each box before moving on.
 6. **Hero discipline** — One **primary** CTA above the fold; bury the full ladder in `<details>` or a secondary section.
 7. **Checkout** — Hero CTA points at **one** Square URL (here: $15 kit link or your SKU).
 8. **Return trip** — Optional Square success URL → `https://…/automation/?thanks=1` (or your path); add the small strip + `hidden` + JS `URLSearchParams` unhide.
-9. **Honesty copy** — State delivery (e.g. “email within 24h”) and that the **receipt is from Square** — no fake scarcity.
+9. **Honesty copy** — State delivery (e.g. “email as soon as Square confirms payment”) and that the **receipt is from Square** — no fake scarcity.
 10. **JSON-LD** — `WebPage` + `Product`/`Offer` for the **primary** SKU; `ItemList` optional for the rest (keep prices in sync with Square).
 11. **Discoverability** — `sitemap.xml` lists `/`, `/automation/`, any new paths; hub links to the funnel.
 12. **Verify** — `curl -sI` the live URLs; click your own link to Square **sandbox or $1 test** if available; fix mobile layout.
@@ -30,7 +30,7 @@ Use this in order. Check each box before moving on.
   <h2>Ship Square checkout on static Pages this afternoon</h2>
   <p class="lead">Static HTML, Square-hosted checkout, no backend.</p>
   <a class="cta cta-primary" href="REPLACE_WITH_SQUARE_PAYMENT_LINK">Pay — $15 Ship Kit</a>
-  <p class="fine-print">Receipt from Square. Fulfillment: email within 24h.</p>
+  <p class="fine-print">Receipt from Square. Fulfillment: email as soon as payment confirms.</p>
 </section>
 ```
 

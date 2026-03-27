@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Analytics: paste Plausible/GA/ Fathom snippet here when you have a domain + ID -->
-<title>Ship Square checkout on GitHub Pages — devtools</title>
-<meta name="description" content="Put Square Payment Links on a static GitHub Pages site: one primary checkout, same-day checklist kit ($15), no backend.">
+<title>No-Show Salvage SMS Pack ($15) + Square checkout — devtools</title>
+<meta name="description" content="No-Show Salvage SMS Pack ($15): 12 copy-paste recovery texts + timing map for local operators. Square checkout; delivery by email as soon as payment confirms.">
 <link rel="canonical" href="https://gitsomeuser.github.io/devtools/automation/">
-<meta property="og:title" content="Ship Square on GitHub Pages this afternoon — devtools">
-<meta property="og:description" content="Static funnel + Square Payment Links. $15 Ship Kit: 12-step list, paste-ready blocks, tier picker.">
+<meta property="og:title" content="No-Show Salvage SMS Pack ($15) — devtools">
+<meta property="og:description" content="Recover missed bookings with 12 copy-paste SMS templates and a send-timing map. Pay on Square; email delivery right after payment confirms.">
 <meta property="og:url" content="https://gitsomeuser.github.io/devtools/automation/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="devtools — Square on static Pages">
-<meta name="twitter:description" content="One hero CTA, Square-hosted checkout, fulfillment SLO on-page.">
+<meta name="twitter:title" content="No-Show Salvage SMS Pack ($15) — devtools">
+<meta name="twitter:description" content="12 SMS templates + timing map for no-shows and late cancels. Square checkout; immediate email fulfillment.">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -66,6 +66,12 @@ p.lead { color: var(--muted); margin-bottom: 1.25rem; font-size: 0.95rem; }
   margin-bottom: 1rem;
 }
 .card h2 { font-size: 1rem; margin-bottom: 0.75rem; }
+.offer-list {
+  margin: 0.5rem 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.offer-list li { margin-bottom: 0.35rem; }
 .secondary-links {
   margin-top: 1.5rem;
   font-size: 0.88rem;
@@ -150,7 +156,7 @@ footer a:hover { text-decoration: underline; }
       "mainEntity": {
         "@type": "Product",
         "name": "devtools — Ship Kit ($15)",
-        "description": "12-step same-day checklist, paste-ready CTA HTML, tier picker for Square on static GitHub Pages. Delivered by email within 24 hours.",
+        "description": "12-step same-day checklist, paste-ready CTA HTML, tier picker for Square on static GitHub Pages. Delivered by email as soon as Square confirms payment.",
         "offers": {
           "@type": "Offer",
           "price": "15.00",
@@ -178,23 +184,67 @@ footer a:hover { text-decoration: underline; }
 </script>
 </head>
 <body>
-<div id="thanks-banner" class="thanks-banner" hidden>Thanks — payment went through Square. Your receipt comes from Square. Kit delivery is by email within the time stated on this page.</div>
+<div id="thanks-banner" class="thanks-banner" hidden>Thanks — payment went through Square. Your receipt comes from Square. We email your purchase right away to the address Square collected.</div>
 <header>
   <h1><span>devtools</span> — automation / checkout</h1>
 </header>
 <main>
   <section class="hero">
-    <h2>Ship Square checkout on GitHub Pages this afternoon</h2>
-    <p class="lead">Static HTML on Pages, Square-hosted card checkout, no backend. If you already ship sites but stall on “pay here,” this page is the rail; the <strong>$15 Ship Kit</strong> is the same-day checklist, paste-ready blocks, and tier picker (email delivery).</p>
+    <h2>No-Show Salvage SMS Pack ($15)</h2>
+    <p class="lead">For local service operators losing money to no-shows and late cancels. Get <strong>12 copy-paste SMS templates</strong> (confirm, reschedule, deposit nudge, recovery) plus a simple send-timing map your team can use the same day.</p>
 
     <p class="note"><strong>Public surface only.</strong> No API secrets in HTML. Canonical URLs: <code>payment-links.json</code> at repo root — keep it in sync with every button.</p>
 
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Get the $15 Ship Kit — pay on Square</a>
+      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Get the $15 No-Show Salvage SMS Pack</a>
     </div>
-    <p class="fine-print">After payment we email the <strong>Ship Kit</strong> (Markdown: <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/SHIP-KIT.md">SHIP-KIT.md</a>; overview: <a href="https://gitsomeuser.github.io/devtools/ship-kit/">/ship-kit/</a>) within <strong>24 hours</strong>. Receipt is from Square. Success URL: <code>?thanks=1</code> on this page.</p>
+    <p class="fine-print">After Square confirms payment we email the <strong>No-Show Salvage SMS Pack</strong> immediately. Includes 12 ready-to-send scripts and a send-timing map. Receipt is from Square. Success URL: <code>?thanks=1</code> on this page.</p>
 
-    <p class="secondary-links">Other SKUs: <a href="../commits/">$1 Commit Copy Deck</a> (paste-ready commits) · <a href="https://square.link/u/dbNxotcN">$1 micro-tip</a> · <a href="https://square.link/u/7B1EWkBj">donate (variable)</a> · <a href="https://square.link/u/qon190ju">$79 — pro / teardown</a> (scope as audit, not implementation).</p>
+    <p class="secondary-links">Other SKUs: <a href="../weekend-gate/">$5 Weekend Ship Gate</a> (pre-build checks + worksheet) · <a href="../commits/">$1 Commit Copy Deck</a> (paste-ready commits) · <a href="https://square.link/u/dbNxotcN">$1 micro-tip</a> · <a href="https://square.link/u/7B1EWkBj">donate (variable)</a> · <a href="https://square.link/u/qon190ju">$79 — pro / teardown</a> (scope as audit, not implementation).</p>
+  </section>
+
+  <section class="card" aria-labelledby="what-you-get-no-show">
+    <h2 id="what-you-get-no-show">What you get in the No-Show Salvage pack</h2>
+    <ul class="offer-list">
+      <li>12 templates: appointment confirm, day-before reminder, same-day reminder, no-show recovery, reschedule, and deposit nudge</li>
+      <li>send-timing map so your team knows exactly when to use each script</li>
+      <li>one-line compliance note to keep messages practical and buyer-safe</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Buy now on Square ($15)</a>
+    </div>
+    <p class="fine-print">Best fit: medspa, barber, tattoo, cleaning, and coaching operators booking through DMs or simple schedulers.</p>
+  </section>
+
+  <section class="card" aria-labelledby="cold-homepage-teardown">
+    <h2 id="cold-homepage-teardown">Cold Homepage Teardown — $35</h2>
+    <p class="lead">For indie founders with a live homepage that doesn’t convert. Send one URL. Get a one-page teardown with the few changes most likely to move signups this week.</p>
+    <ul class="offer-list">
+      <li>10 fixes ranked by effort vs revenue impact</li>
+      <li>rewritten hero + CTA suggestion</li>
+      <li>above-the-fold layout and trust signal notes</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Cold Homepage Teardown</a>
+    </div>
+    <p class="fine-print">After checkout, reply to the Square receipt email with your URL + your target buyer + your primary CTA (signup / book call / buy). Scope is analysis + copy suggestions; no code changes.</p>
+  </section>
+
+  <section class="card" aria-labelledby="client-magnet-one-pager">
+    <h2 id="client-magnet-one-pager">Client Magnet One-Pager — $35</h2>
+    <p class="lead">For solo consultants and indie operators with a vague homepage. Send your current URL and target buyer; get a clean one-pager rewrite structure you can paste same day.</p>
+    <ul class="offer-list">
+      <li>one headline stack with a clear promise and audience fit</li>
+      <li>services section copy with concrete outcomes (not generic claims)</li>
+      <li>proof block prompts + CTA rewrite focused on one action</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Client Magnet One-Pager</a>
+    </div>
+    <p class="fine-print">Scope is copy + section structure only (no implementation). After payment, reply to your Square receipt email with homepage URL, offer, and buyer profile.</p>
   </section>
 
   <details class="card">
@@ -202,13 +252,71 @@ footer a:hover { text-decoration: underline; }
     <div class="tiers" id="tiers">
       <div class="tier"><span>$1 — micro / thank-you</span><a class="cta" href="https://square.link/u/dbNxotcN">Pay $1</a></div>
       <div class="tier"><span>$5 — tip / small unlock</span><a class="cta" href="https://square.link/u/PtNcSZna">Pay $5</a></div>
-      <div class="tier"><span>$15 — Ship Kit (primary)</span><a class="cta" href="https://square.link/u/vrnZ4R19">Pay $15</a></div>
-      <div class="tier"><span>$35 — kit / bundle</span><a class="cta" href="https://square.link/u/d8Hz3Y7d">Pay $35</a></div>
+      <div class="tier"><span>$15 tier</span><a class="cta" href="https://square.link/u/vrnZ4R19">Pay $15</a></div>
+      <div class="tier"><span>$35 tier</span><a class="cta" href="https://square.link/u/d8Hz3Y7d">Pay $35</a></div>
       <div class="tier"><span>$79 — pro</span><a class="cta" href="https://square.link/u/qon190ju">Pay $79</a></div>
       <div class="tier"><span>$199 — anchor / premium</span><a class="cta" href="https://square.link/u/eHyzQOeb">Pay $199</a></div>
       <div class="tier"><span>Donation — amount at checkout</span><a class="cta donate" href="https://square.link/u/7B1EWkBj">Donate</a></div>
     </div>
   </details>
+
+  <section class="card" aria-labelledby="reply-rescue-pack">
+    <h2 id="reply-rescue-pack">Reply Rescue Pack ($35)</h2>
+    <p class="lead">Warm leads are expensive to win and easy to lose when replies slip. Send 20 stalled inbound messages (DM or email); get 20 send-ready replies plus 5 reusable templates by email as soon as payment confirms.</p>
+    <ul class="offer-list">
+      <li>20 custom replies rewritten for speed and conversion</li>
+      <li>5 reusable templates for follow-up, objection, and close</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Get the $35 Reply Rescue Pack</a>
+    </div>
+    <p class="fine-print">Scope: copy deliverable only; no account access needed. Submit plain text only and remove sensitive details before sharing.</p>
+  </section>
+
+  <section class="card" aria-labelledby="objection-crusher-voice-notes">
+    <h2 id="objection-crusher-voice-notes">Objection Crusher Voice Notes ($15)</h2>
+    <p class="lead">For founders with active conversations that stall after pricing or trust objections. Send your 5 hardest objections and get 5 copy-paste replies plus 5 voice-note style variants you can read verbatim.</p>
+    <ul class="offer-list">
+      <li>5 custom objection replies (plain text, send-ready)</li>
+      <li>5 voice-note variants to use in DM follow-up</li>
+      <li>delivery by email as soon as Square confirms payment (follow the post-checkout instructions in your receipt email)</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Buy the $15 Objection Crusher now</a>
+    </div>
+    <p class="fine-print">After checkout, reply to the Square receipt email with your 5 objections and current offer in one paragraph. We return your pack immediately after payment confirms and we have your inputs.</p>
+  </section>
+
+  <section class="card" aria-labelledby="inbox-triage-strike">
+    <h2 id="inbox-triage-strike">Inbox Triage Strike — $79</h2>
+    <p class="lead">Warm leads go stale fast. Send one inbox export (or a pasted thread set) and get a prioritized rescue map with send-ready replies so you can close conversations this week.</p>
+    <ul class="offer-list">
+      <li>hot/warm/cold triage map for your current lead threads</li>
+      <li>12 send-ready replies tailored to your offer and buyer type</li>
+      <li>7-day next-touch plan to prevent another stale-lead pileup</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/qon190ju">Buy the $79 Inbox Triage Strike</a>
+    </div>
+    <p class="fine-print">Scope: triage + reply copy only (no account logins or CRM implementation). Remove sensitive data before sharing and send text-only excerpts where possible.</p>
+  </section>
+
+  <section class="card" aria-labelledby="one-day-offer-stress-test">
+    <h2 id="one-day-offer-stress-test">One-Day Offer Stress Test ($199)</h2>
+    <p class="lead">You bring your current offer page (or a messy doc) and your target buyer. We return three price/packaging variants, a rewritten hero + CTA block, and a 12-message outbound script (3 hooks × 3 objections) you can start sending immediately.</p>
+    <ul class="offer-list">
+      <li>3 packaging variants (clear “who it’s for” + what’s included)</li>
+      <li>hero rewrite + CTA block you can paste into your landing</li>
+      <li>12-message outbound script + 7-day micro-plan</li>
+      <li>delivery by email as soon as Square confirms payment</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta cta-primary" href="https://square.link/u/eHyzQOeb">Get the $199 One-Day Offer Stress Test</a>
+    </div>
+    <p class="fine-print">Scope: copy + messaging only. Not implementation, not ad buying, not done-for-you outreach. If you don’t have a landing page yet, we’ll work from a doc and you paste it into your site.</p>
+  </section>
 </main>
 <footer>
   <p><a href="https://square.link/u/7B1EWkBj">Tip the public lab</a> (donation) · Config: <code>.env</code> (local) · <code>payment-links.json</code> · <code>AUTOMATION.md</code></p>

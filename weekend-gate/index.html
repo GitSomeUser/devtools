@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekend Ship Gate — five checks before you start coding</title>
+<meta name="description" content="Five yes/no gates for solo builders: pass all five before you open an editor this weekend, or write the one-paragraph offer first. $5 unlock: expanded gates, stall detector worksheet, Notion block.">
+<link rel="canonical" href="https://gitsomeuser.github.io/devtools/weekend-gate/">
+<meta property="og:title" content="Weekend Ship Gate — pay $5 so your weekend can’t lie to you">
+<meta property="og:description" content="Free public gate: five checks. Full pack (worksheet + Notion block + expanded gates) — Square checkout; emailed as soon as payment confirms.">
+<meta property="og:url" content="https://gitsomeuser.github.io/devtools/weekend-gate/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Weekend Ship Gate ($5 full pack) — devtools">
+<meta name="twitter:description" content="Five yes/no checks before you code this weekend. Curated worksheet + Notion block after checkout.">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #71717a;
+  --accent: #22c55e;
+  --link: #6366f1;
+  --warn: #f59e0b;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.65;
+}
+header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+header h1 { font-size: 1.25rem; font-weight: 600; }
+header h1 span { color: var(--accent); }
+main { max-width: 44rem; padding: 2rem; }
+.hero h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.28;
+  margin-bottom: 0.75rem;
+}
+p.lead { color: var(--muted); margin-bottom: 1.25rem; font-size: 0.95rem; }
+.fine-print { color: var(--muted); font-size: 0.82rem; margin-top: 1rem; max-width: 40rem; }
+.note {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid var(--warn);
+  color: #fcd34d;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+}
+.gate {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.15rem 1.25rem;
+  margin: 1.25rem 0;
+}
+.gate h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.gate ol {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #a1a1aa;
+  font-size: 0.92rem;
+}
+.gate li { margin-bottom: 0.65rem; }
+.gate li strong { color: var(--text); }
+.unlock {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--link);
+  color: #c7d2fe;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+.unlock ul { margin: 0.65rem 0 0 1.1rem; color: #a5b4fc; }
+.cta-row { margin-top: 1.25rem; }
+.cta {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: #052e16;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 1rem;
+}
+.cta:hover { filter: brightness(1.08); }
+.secondary { margin-top: 1.25rem; font-size: 0.88rem; color: var(--muted); }
+.secondary a { color: var(--link); font-weight: 500; text-decoration: none; }
+.secondary a:hover { text-decoration: underline; }
+footer { padding: 2rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+footer a { color: var(--link); text-decoration: none; }
+.thanks-banner {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid var(--accent);
+  color: #bbf7d0;
+  padding: 0.9rem 1.25rem;
+  margin: 0 2rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  max-width: 44rem;
+}
+.thanks-banner[hidden] { display: none !important; }
+code { font-size: 0.88em; background: #0a0c10; padding: 0.15em 0.35em; border-radius: 4px; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://gitsomeuser.github.io/devtools/weekend-gate/#page",
+  "name": "Weekend Ship Gate — pre-build checks for indie hackers ($5 full pack)",
+  "description": "Public five-question gate for weekend builders. Paid unlock includes expanded gates, stall detector worksheet, and copy-paste Notion block. Square checkout; fulfillment by email as soon as payment confirms.",
+  "url": "https://gitsomeuser.github.io/devtools/weekend-gate/",
+  "mainEntity": {
+    "@type": "Product",
+    "name": "Weekend Ship Gate — full pack",
+    "description": "Digital worksheet: expanded yes/no gates, stall detector, and Notion-ready block. Emailed right after $5 Square payment confirms.",
+    "offers": {
+      "@type": "Offer",
+      "price": "5.00",
+      "priceCurrency": "USD",
+      "url": "https://square.link/u/PtNcSZna",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+}
+</script>
+</head>
+<body>
+<div id="thanks-banner" class="thanks-banner" hidden>Thanks — Square has your receipt. The <strong>Weekend Ship Gate</strong> full pack (Markdown) goes to the email Square collected — we send it as soon as payment confirms.</div>
+<header>
+  <h1><span>devtools</span> — Weekend Ship Gate</h1>
+</header>
+<main>
+  <section class="hero">
+    <h2>Pay five bucks so your weekend can’t lie to you</h2>
+    <p class="lead">Before you open an editor, you either <strong>pass all five gates</strong> or you <strong>stop and write the one-paragraph offer</strong>. The list below is the public gate — honest and blunt. The <strong>$5 pack</strong> is what you paste into your notes app: <strong>expanded gates</strong>, a <strong>stall detector</strong> you can score, and a <strong>Notion block</strong> you duplicate every Friday.</p>
+
+    <p class="note"><strong>Rule.</strong> A “no” on any question means you don’t get to start on implementation until the offer paragraph exists — not in your head; on disk, ugly, done.</p>
+
+    <div class="gate">
+      <h3>The five gates (yes / no)</h3>
+      <ol>
+        <li><strong>Outcome in one sentence.</strong> Can a stranger read one sentence and know what they <em>get</em> (not what you built)?</li>
+        <li><strong>Buyer-shaped, not hero-shaped.</strong> Can you name <em>who</em> pays or adopts first — even if the list is three people?</li>
+        <li><strong>Weekend-sized.</strong> Is the smallest useful version shippable without learning a new stack from zero?</li>
+        <li><strong>Offer before README.</strong> Have you written the offer in plain language — not feature bullets — in under 120 words?</li>
+        <li><strong>Silent pay path.</strong> If it went live tonight, could someone pay or sign up without a DM from you?</li>
+      </ol>
+    </div>
+
+    <div class="unlock">
+      <strong>Full pack (<code>usd_5</code>) — $5 on Square</strong>
+      <ul>
+        <li>Expanded gates (12 decisions + “kill the weekend” exits)</li>
+        <li>Stall detector worksheet — score, interpret, one corrective action</li>
+        <li>Copy-paste Notion toggle + callout block for Friday ritual</li>
+      </ul>
+    </div>
+
+    <div class="cta-row">
+      <a class="cta" href="https://square.link/u/PtNcSZna">Unlock the full pack — $5 on Square</a>
+    </div>
+    <p class="fine-print">Configure Square’s success URL to <code>https://gitsomeuser.github.io/devtools/weekend-gate/?thanks=1</code> if you want the on-page confirmation strip. Fulfillment: we email the Markdown pack as soon as payment confirms — same SLO as <a href="../automation/">automation</a> and <a href="../commits/">Commit Copy Deck</a>. Tier URL matches <code>payment-links.json</code> <code>usd_5</code>.</p>
+
+    <p class="secondary"><a href="../automation/">Automation / checkout rail</a> · <a href="../ship-kit/">$15 Ship Kit</a> · <a href="../">Hub</a> · <a href="https://github.com/GitSomeUser/devtools">GitHub</a></p>
+  </section>
+</main>
+<footer>
+  <p>Public funnel: <code>/weekend-gate/</code>. Paid pack is Markdown emailed after checkout — not a file in this repo.</p>
+</footer>
+<script>
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get('thanks') === '1') {
+      var el = document.getElementById('thanks-banner');
+      if (el) el.removeAttribute('hidden');
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

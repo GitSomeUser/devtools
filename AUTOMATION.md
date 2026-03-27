@@ -10,9 +10,11 @@ Agents ship HTML, links, and copy **in this repo**; **Square** (your account) co
 
 The **Overnight Diary** is intentionally **idea → dollars**, not idea → list. With **`hour_runner.py --slot-sec 3600`**, each **hour** ends with **deploy · sell · distribute** closeout (`hour-close-i*.md`) and the **next hour starts a brand-new idea**. See **`~/clawd/overnight/OVERNIGHT_PURPOSE.md`**.
 
-**Lifecycle:** Curated buyer-facing SKUs graduate to **`/pipeline/`** (GitHub Pages: `…/devtools/pipeline/`) as **Possible Pipeline** work; long term, **Alive Management** means real customers and support. Canonical doc: **`docs/TEAM-LIFECYCLE.md`**. Internal pointer: **`~/clawd/TEAM-PURPOSE.md`**.
+**Lifecycle:** Curated offers live at **`/pipeline/`** (Pages: `…/devtools/pipeline/`). **Possible Pipeline** is the **internal** phase name for polish + outreach; public pages use normal product titles. Canonical doc: **`docs/TEAM-LIFECYCLE.md`**. Clawd pointer: **`~/clawd/team-purpose.md`**.
 
 ## Payment ladder (canonical)
+
+**Model:** One Square Payment Link **per price tier**, shared by every SKU at that price (see **`payment-links.json`** labels).
 
 | Tier | Amount | `.env` key |
 |------|--------|------------|
@@ -32,11 +34,15 @@ When a Square link **changes**, update **`.env`**, **`payment-links.json`**, and
 
 **Do not** commit Square **Application Secret**, **Access Token**, or **Refresh Token**.
 
+## Fulfillment (default SLO)
+
+**As soon as Square confirms payment**, email the buyer (address from Square) the deliverable or link—**immediate**, not a next-day window. Every public page that promises fulfillment must match this unless you deliberately scope a SKU differently and update copy in lockstep.
+
 ## Fulfillment — $15 Ship Kit
 
 - **Product:** `docs/SHIP-KIT.md` (12-step checklist + paste-ready HTML).
 - **Overview page:** `/ship-kit/` for buyers who want a short summary before Square.
-- **SLO:** Email the buyer (address from Square) within **24h** with link to the repo path or raw GitHub URL.
+- **SLO:** Email the buyer **immediately after payment confirmation** with link to the repo path or raw GitHub URL.
 - **Optional after pay:** Square success URL → `https://gitsomeuser.github.io/devtools/automation/?thanks=1` (thanks strip on-page).
 
 ## Continuity (Clawd)
@@ -56,25 +62,25 @@ Wall-clock minimum for automated multi-agent loops stays in `~/clawd/overnight/h
 
 1. Traffic → `https://gitsomeuser.github.io/devtools/` and `/automation/`.
 2. Conversion → **Square Payment Links** (tier buttons on `/automation/`).
-3. Fulfillment — document in repo (file download, email via Square, or manual) as you define the SKU.
+3. Fulfillment — email **immediately** after Square confirms payment, unless a SKU-specific note says otherwise and operations match it.
 
 ### SKU: `usd_15` (Ship Kit) — fulfillment SLO
 
 - **What:** Markdown **Ship Kit** — 12-step same-day list, paste-ready HTML blocks, tier picker. Source of truth for file content: **`~/clawd/overnight/paid-kit-usd15-v1.md`** (not shipped in public repo so the offer stays a real deliverable).
-- **How:** Buyer pays on Square → Master (or agent) emails the kit within **24 hours** using the one-line template in that file.
-- **On-page promise:** `/automation/` states the 24h email SLO; keep copy aligned with actual behavior.
+- **How:** Buyer pays on Square → Master (or agent) emails the kit **immediately after payment confirmation** using the one-line template in that file.
+- **On-page promise:** `/automation/` and `/ship-kit/` state the immediate SLO; keep copy aligned with actual behavior.
 
 ### SKU: `usd_1` (Commit Copy Deck) — fulfillment SLO
 
 - **What:** Markdown **Commit Copy Deck** — conventional commit lines, PR title formulas, one-line diff explainers, worksheet. Source of truth: **`~/clawd/overnight/commit-copy-deck-deliverable.md`** (private to Clawd; not the full paid body in the public repo).
 - **Landing + SEO:** `/commits/` on Pages — primary CTA → Square `usd_1` URL from `payment-links.json`.
-- **How:** Buyer pays on Square → email the deliverable file within **24 hours** to the address Square collects (same muscle as Ship Kit).
+- **How:** Buyer pays on Square → email the deliverable **immediately after payment confirmation** to the address Square collects.
 - **Optional success URL:** `https://gitsomeuser.github.io/devtools/commits/?thanks=1` for on-page thanks strip.
 
 ### SKU: `usd_5` (Weekend Ship Gate) — fulfillment SLO
 
 - **What:** Markdown **full pack** — expanded twelve-gate checklist, stall detector worksheet (score + interpretation), one-paragraph offer template, copy-paste **Notion** toggle/callout block. Source of truth: **`~/clawd/overnight/weekend-gate-usd5-v1.md`** (private to Clawd; not the paid body in the public repo).
 - **Landing + SEO:** `/weekend-gate/` on Pages — public five yes/no gates as teaser; primary CTA → Square `usd_5` URL from `payment-links.json` (`https://square.link/u/PtNcSZna`).
-- **How:** Buyer pays on Square → email the deliverable file (or raw attachment / gist link) within **24 hours** to the address Square collects.
+- **How:** Buyer pays on Square → email the deliverable file (or raw attachment / gist link) **immediately after payment confirmation** to the address Square collects.
 - **Optional success URL:** `https://gitsomeuser.github.io/devtools/weekend-gate/?thanks=1` for on-page thanks strip.
-- **On-page promise:** The landing states the 24h email SLO; keep fulfillment copy aligned with `AUTOMATION.md` and actual behavior.
+- **On-page promise:** The landing states immediate fulfillment; keep copy aligned with `AUTOMATION.md` and actual behavior.

@@ -5,8 +5,8 @@
   "tiers": [
     { "id": "usd_1", "label": "$1 — micro / thank-you", "amount": 1, "url": "https://square.link/u/dbNxotcN" },
     { "id": "usd_5", "label": "$5 — tip / small unlock", "amount": 5, "url": "https://square.link/u/PtNcSZna" },
-    { "id": "usd_15", "label": "$15 — single deliverable", "amount": 15, "url": "https://square.link/u/vrnZ4R19" },
-    { "id": "usd_35", "label": "$35 — kit / bundle", "amount": 35, "url": "https://square.link/u/d8Hz3Y7d" },
+    { "id": "usd_15", "label": "$15 tier", "amount": 15, "url": "https://square.link/u/vrnZ4R19" },
+    { "id": "usd_35", "label": "$35 tier", "amount": 35, "url": "https://square.link/u/d8Hz3Y7d" },
     { "id": "usd_79", "label": "$79 — pro tier", "amount": 79, "url": "https://square.link/u/qon190ju" },
     { "id": "usd_199", "label": "$199 — anchor / premium", "amount": 199, "url": "https://square.link/u/eHyzQOeb" }
   ],
