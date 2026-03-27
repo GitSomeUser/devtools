@@ -1,8 +1,8 @@
 {
   "currency": "USD",
   "provider": "square",
-  "updated": "2026-03-26",
-  "checkout_bridge_base_url": "",
+  "updated": "2026-03-27",
+  "checkout_bridge_base_url": "https://devtools-square-bridge.stratumsatoshi.workers.dev",
   "skus": {
     "no-show-salvage-sms": { "tier": "usd_15", "square_line_name": "No-Show Salvage SMS Pack" },
     "ship-kit": { "tier": "usd_15", "square_line_name": "Ship Kit ($15)" },
