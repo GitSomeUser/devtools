@@ -53,15 +53,25 @@ Pages load **`js/checkout-resolve.js`**, which rewrites `a[data-checkout-sku]` t
 
 ## Automatic fulfillment emails (Resend)
 
-When webhook receives a **COMPLETED** payment with note `devtools:sku=<slug>`, the worker now sends an email automatically via Resend:
+When webhook receives a **COMPLETED** payment with note `devtools:sku=<slug>`, the worker sends email via Resend:
 
-- recipient: `buyer_email_address` from Square payment (or `FULFILL_TO_OVERRIDE_EMAIL` if set)
-- subject/body: includes SKU, payment ID, amount, and deliverable URL
-- if `RESEND_API_KEY` / `FULFILL_FROM_EMAIL` are missing, it logs a skip reason (no email sent)
+- recipient: `buyer_email_address` from Square (or `FULFILL_TO_OVERRIDE_EMAIL` if set)
+- **Attachment:** if KV has `product:<slug>` (markdown body), that file is attached and inlined in plain text; otherwise the email explains the fallback link only
+- **Dedup:** `fulfilled:<payment_id>` stored in the same `DELIVERABLES` KV namespace (30-day TTL) so webhook retries do not double-send
 
-Optional hardening:
+### Loading private deliverables (KV)
 
-- add a KV namespace bound as `FULFILLMENT_KV` to deduplicate webhook retries (see `wrangler.toml` comments)
+Source files stay off the public repo (e.g. under `~/clawd/overnight/`). Push bytes into KV:
+
+```bash
+cd fulfillment-bridge
+npx wrangler kv key put "product:commit-copy-deck" --binding=DELIVERABLES --path=$HOME/clawd/overnight/commit-copy-deck-deliverable.md
+npx wrangler kv key put "product:ship-kit" --binding=DELIVERABLES --path=$HOME/clawd/overnight/paid-kit-usd15-v1.md
+```
+
+Add more SKUs the same way (`product:<sku>` must match `catalog.json` / site `data-checkout-sku`).
+
+If `RESEND_API_KEY` / `FULFILL_FROM_EMAIL` are missing, no email is sent (logged).
 
 ## Webhook log line
 

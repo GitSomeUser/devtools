@@ -16,10 +16,11 @@ compatibility_date = "2024-10-01"
 # SQUARE_API_VERSION = "2024-10-17"
 # FULFILL_FROM_EMAIL = "fulfillment@yourdomain.com"
 # FULFILL_TO_OVERRIDE_EMAIL = ""   # optional test override
-# Optional KV for duplicate-send protection:
-# [[kv_namespaces]]
-# binding = "FULFILLMENT_KV"
-# id = "REPLACE_WITH_KV_NAMESPACE_ID"
+# Private product bodies (markdown): keys product:<sku> — see fulfillment-bridge/README.md
+[[kv_namespaces]]
+binding = "DELIVERABLES"
+id = "14b4aafb900645f1ae17e491a1d059be"
+
 [vars]
 SQUARE_ENVIRONMENT = "production"
 SQUARE_LOCATION_ID = "L0JDKBT4YJYX1"

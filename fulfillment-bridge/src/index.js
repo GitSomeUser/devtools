@@ -94,9 +94,29 @@ function deliverableUrlForSku(sku, env) {
   return `${base}/pipeline/#${sku}`;
 }
 
+/** Base64 (UTF-8) for Resend attachment bodies */
+function base64Utf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunk)));
+  }
+  return btoa(binary);
+}
+
 async function sendFulfillmentEmail(env, data) {
   if (!env.RESEND_API_KEY || !env.FULFILL_FROM_EMAIL || !data.to) {
     return { sent: false, reason: 'missing resend config or recipient' };
+  }
+  const payload = {
+    from: env.FULFILL_FROM_EMAIL,
+    to: [data.to],
+    subject: data.subject,
+    text: data.text,
+  };
+  if (data.attachments?.length) {
+    payload.attachments = data.attachments;
   }
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -104,12 +124,7 @@ async function sendFulfillmentEmail(env, data) {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      from: env.FULFILL_FROM_EMAIL,
-      to: [data.to],
-      subject: data.subject,
-      text: data.text,
-    }),
+    body: JSON.stringify(payload),
   });
   const body = await response.text();
   if (!response.ok) {
@@ -118,24 +133,36 @@ async function sendFulfillmentEmail(env, data) {
   return { sent: true, body };
 }
 
+function kv(env) {
+  return env.DELIVERABLES;
+}
+
 async function seenPaymentBefore(env, paymentId) {
-  if (!env.FULFILLMENT_KV || !paymentId) return false;
+  const store = kv(env);
+  if (!store || !paymentId) return false;
   const key = `fulfilled:${paymentId}`;
-  const existing = await env.FULFILLMENT_KV.get(key);
+  const existing = await store.get(key);
   return !!existing;
 }
 
 async function markPaymentSeen(env, paymentId, sku) {
-  if (!env.FULFILLMENT_KV || !paymentId) return;
+  const store = kv(env);
+  if (!store || !paymentId) return;
   const key = `fulfilled:${paymentId}`;
-  await env.FULFILLMENT_KV.put(
+  await store.put(
     key,
     JSON.stringify({ sku, at: new Date().toISOString() }),
     { expirationTtl: 60 * 60 * 24 * 30 }
   );
 }
 
-function buildFulfillmentEmail(payment, sku, env) {
+async function loadDeliverableBody(env, sku) {
+  const store = kv(env);
+  if (!store || !sku) return null;
+  return store.get(`product:${sku}`);
+}
+
+async function buildFulfillmentEmail(payment, sku, env) {
   const product = catalog.skus?.[sku]?.square_line_name || sku;
   const to = env.FULFILL_TO_OVERRIDE_EMAIL || payment.buyer_email_address || '';
   const amount = payment.amount_money?.amount || 0;
@@ -143,18 +170,53 @@ function buildFulfillmentEmail(payment, sku, env) {
   const money = `${(amount / 100).toFixed(2)} ${currency}`;
   const deliverableUrl = deliverableUrlForSku(sku, env);
   const subject = `Your ${product} purchase (${money})`;
-  const text = [
+  const bodyMd = await loadDeliverableBody(env, sku);
+  const hasBody = !!(bodyMd && bodyMd.trim());
+
+  const headerLines = [
     `Thanks for your payment for ${product}.`,
     '',
     `SKU: ${sku}`,
     `Payment ID: ${payment.id}`,
     `Amount: ${money}`,
     '',
-    `Deliverable / next step: ${deliverableUrl}`,
+    hasBody
+      ? 'Your purchased file is attached. You can also use the link below.'
+      : 'We will send the full file as soon as it is loaded into fulfillment storage. Until then, use this page:',
+    '',
+    `Link: ${deliverableUrl}`,
     '',
     'If you need anything adjusted, reply to this email.',
-  ].join('\n');
-  return { to, subject, text, deliverableUrl, product, money };
+  ];
+
+  const text = hasBody
+    ? [...headerLines, '', '---', '', 'PLAIN TEXT COPY (same as attachment)', '', bodyMd.trim()].join('\n')
+    : headerLines.join('\n');
+
+  const attachments = [];
+  if (hasBody) {
+    const filename =
+      sku === 'commit-copy-deck'
+        ? 'commit-copy-deck.md'
+        : sku === 'ship-kit'
+          ? 'ship-kit.md'
+          : `${sku}.md`;
+    attachments.push({
+      filename,
+      content: base64Utf8(bodyMd),
+    });
+  }
+
+  return {
+    to,
+    subject,
+    text,
+    attachments: attachments.length ? attachments : undefined,
+    deliverableUrl,
+    product,
+    money,
+    hasBody,
+  };
 }
 
 export default {
@@ -262,10 +324,18 @@ export default {
       if (sku && payment?.id && status === 'COMPLETED') {
         const alreadyDone = await seenPaymentBefore(env, payment.id);
         if (!alreadyDone) {
-          const email = buildFulfillmentEmail(payment, sku, env);
+          const email = await buildFulfillmentEmail(payment, sku, env);
           const result = await sendFulfillmentEmail(env, email);
           await markPaymentSeen(env, payment.id, sku);
-          console.log(JSON.stringify({ ...summary, fulfillment_email: result, to: email.to, deliverable: email.deliverableUrl }));
+          console.log(
+            JSON.stringify({
+              ...summary,
+              fulfillment_email: result,
+              to: email.to,
+              deliverable: email.deliverableUrl,
+              attachment: !!email.attachments?.length,
+            })
+          );
         } else {
           console.log(JSON.stringify({ ...summary, skipped: 'already-fulfilled' }));
         }
