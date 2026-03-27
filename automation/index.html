@@ -172,7 +172,7 @@ footer a:hover { text-decoration: underline; }
       "numberOfItems": 6,
       "itemListElement": [
         {"@type": "ListItem", "position": 1, "item": {"@type": "Product", "name": "devtools — $1", "offers": {"@type": "Offer", "price": "1.00", "priceCurrency": "USD", "url": "https://square.link/u/dbNxotcN"}}},
-        {"@type": "ListItem", "position": 2, "item": {"@type": "Product", "name": "devtools — $5", "offers": {"@type": "Offer", "price": "5.00", "priceCurrency": "USD", "url": "https://square.link/u/PtNcSZna"}}},
+        {"@type": "ListItem", "position": 2, "item": {"@type": "Product", "name": "devtools — $15", "offers": {"@type": "Offer", "price": "15.00", "priceCurrency": "USD", "url": "https://square.link/u/vrnZ4R19"}}},
         {"@type": "ListItem", "position": 3, "item": {"@type": "Product", "name": "devtools — $35", "offers": {"@type": "Offer", "price": "35.00", "priceCurrency": "USD", "url": "https://square.link/u/d8Hz3Y7d"}}},
         {"@type": "ListItem", "position": 4, "item": {"@type": "Product", "name": "devtools — $79", "offers": {"@type": "Offer", "price": "79.00", "priceCurrency": "USD", "url": "https://square.link/u/qon190ju"}}},
         {"@type": "ListItem", "position": 5, "item": {"@type": "Product", "name": "devtools — $199", "offers": {"@type": "Offer", "price": "199.00", "priceCurrency": "USD", "url": "https://square.link/u/eHyzQOeb"}}},
@@ -196,11 +196,11 @@ footer a:hover { text-decoration: underline; }
     <p class="note"><strong>Public surface only.</strong> No API secrets in HTML. Canonical URLs: <code>payment-links.json</code> at repo root — keep it in sync with every button.</p>
 
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Get the $15 No-Show Salvage SMS Pack</a>
+      <a class="cta cta-primary" data-checkout-sku="no-show-salvage-sms" href="https://square.link/u/vrnZ4R19">Get the $15 No-Show Salvage SMS Pack</a>
     </div>
     <p class="fine-print">After Square confirms payment we email the <strong>No-Show Salvage SMS Pack</strong> immediately. Includes 12 ready-to-send scripts and a send-timing map. Receipt is from Square. Success URL: <code>?thanks=1</code> on this page.</p>
 
-    <p class="secondary-links">Other SKUs: <a href="../weekend-gate/">$5 Weekend Ship Gate</a> (pre-build checks + worksheet) · <a href="../commits/">$1 Commit Copy Deck</a> (paste-ready commits) · <a href="https://square.link/u/dbNxotcN">$1 micro-tip</a> · <a href="https://square.link/u/7B1EWkBj">donate (variable)</a> · <a href="https://square.link/u/qon190ju">$79 — pro / teardown</a> (scope as audit, not implementation).</p>
+    <p class="secondary-links">Also: <a href="../commits/">$1 Commit Copy Deck</a> (paste-ready commits) · <a href="https://square.link/u/dbNxotcN" data-checkout-sku="micro-tip-usd1">$1 micro-tip</a> · <a href="https://square.link/u/7B1EWkBj">donate (variable)</a> · <a href="https://square.link/u/qon190ju">$79 — pro / teardown</a> (scope as audit, not implementation).</p>
   </section>
 
   <section class="card" aria-labelledby="what-you-get-no-show">
@@ -212,7 +212,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Buy now on Square ($15)</a>
+      <a class="cta cta-primary" data-checkout-sku="no-show-salvage-sms" href="https://square.link/u/vrnZ4R19">Buy now on Square ($15)</a>
     </div>
     <p class="fine-print">Best fit: medspa, barber, tattoo, cleaning, and coaching operators booking through DMs or simple schedulers.</p>
   </section>
@@ -227,7 +227,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Cold Homepage Teardown</a>
+      <a class="cta cta-primary" data-checkout-sku="cold-homepage-teardown" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Cold Homepage Teardown</a>
     </div>
     <p class="fine-print">After checkout, reply to the Square receipt email with your URL + your target buyer + your primary CTA (signup / book call / buy). Scope is analysis + copy suggestions; no code changes.</p>
   </section>
@@ -242,7 +242,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Client Magnet One-Pager</a>
+      <a class="cta cta-primary" data-checkout-sku="client-magnet-one-pager" href="https://square.link/u/d8Hz3Y7d">Buy the $35 Client Magnet One-Pager</a>
     </div>
     <p class="fine-print">Scope is copy + section structure only (no implementation). After payment, reply to your Square receipt email with homepage URL, offer, and buyer profile.</p>
   </section>
@@ -250,8 +250,7 @@ footer a:hover { text-decoration: underline; }
   <details class="card">
     <summary>Full tier ladder (all Square links)</summary>
     <div class="tiers" id="tiers">
-      <div class="tier"><span>$1 — micro / thank-you</span><a class="cta" href="https://square.link/u/dbNxotcN">Pay $1</a></div>
-      <div class="tier"><span>$5 — tip / small unlock</span><a class="cta" href="https://square.link/u/PtNcSZna">Pay $5</a></div>
+      <div class="tier"><span>$1 tier</span><a class="cta" href="https://square.link/u/dbNxotcN">Pay $1</a></div>
       <div class="tier"><span>$15 tier</span><a class="cta" href="https://square.link/u/vrnZ4R19">Pay $15</a></div>
       <div class="tier"><span>$35 tier</span><a class="cta" href="https://square.link/u/d8Hz3Y7d">Pay $35</a></div>
       <div class="tier"><span>$79 — pro</span><a class="cta" href="https://square.link/u/qon190ju">Pay $79</a></div>
@@ -269,7 +268,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/d8Hz3Y7d">Get the $35 Reply Rescue Pack</a>
+      <a class="cta cta-primary" data-checkout-sku="reply-rescue-pack" href="https://square.link/u/d8Hz3Y7d">Get the $35 Reply Rescue Pack</a>
     </div>
     <p class="fine-print">Scope: copy deliverable only; no account access needed. Submit plain text only and remove sensitive details before sharing.</p>
   </section>
@@ -283,7 +282,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment (follow the post-checkout instructions in your receipt email)</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/vrnZ4R19">Buy the $15 Objection Crusher now</a>
+      <a class="cta cta-primary" data-checkout-sku="objection-crusher-voice-notes" href="https://square.link/u/vrnZ4R19">Buy the $15 Objection Crusher now</a>
     </div>
     <p class="fine-print">After checkout, reply to the Square receipt email with your 5 objections and current offer in one paragraph. We return your pack immediately after payment confirms and we have your inputs.</p>
   </section>
@@ -298,7 +297,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/qon190ju">Buy the $79 Inbox Triage Strike</a>
+      <a class="cta cta-primary" data-checkout-sku="inbox-triage-strike" href="https://square.link/u/qon190ju">Buy the $79 Inbox Triage Strike</a>
     </div>
     <p class="fine-print">Scope: triage + reply copy only (no account logins or CRM implementation). Remove sensitive data before sharing and send text-only excerpts where possible.</p>
   </section>
@@ -313,7 +312,7 @@ footer a:hover { text-decoration: underline; }
       <li>delivery by email as soon as Square confirms payment</li>
     </ul>
     <div class="cta-row">
-      <a class="cta cta-primary" href="https://square.link/u/eHyzQOeb">Get the $199 One-Day Offer Stress Test</a>
+      <a class="cta cta-primary" data-checkout-sku="one-day-offer-stress-test" href="https://square.link/u/eHyzQOeb">Get the $199 One-Day Offer Stress Test</a>
     </div>
     <p class="fine-print">Scope: copy + messaging only. Not implementation, not ad buying, not done-for-you outreach. If you don’t have a landing page yet, we’ll work from a doc and you paste it into your site.</p>
   </section>
@@ -322,6 +321,7 @@ footer a:hover { text-decoration: underline; }
   <p><a href="https://square.link/u/7B1EWkBj">Tip the public lab</a> (donation) · Config: <code>.env</code> (local) · <code>payment-links.json</code> · <code>AUTOMATION.md</code></p>
   <p>Hub: <a href="https://gitsomeuser.github.io/devtools/">devtools index</a> · Code: <a href="https://github.com/GitSomeUser/devtools">GitHub</a></p>
 </footer>
+<script src="../js/checkout-resolve.js" defer></script>
 <script>
 (function () {
   try {

@@ -4,3 +4,7 @@
 .env.*.local
 *.pem
 *.key
+
+# Fulfillment bridge (local Wrangler)
+fulfillment-bridge/node_modules/
+fulfillment-bridge/.wrangler/

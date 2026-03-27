@@ -145,7 +145,7 @@ docs(readme): clarify env vars for local Square stub</pre>
     </div>
 
     <div class="cta-row">
-      <a class="cta" href="https://square.link/u/dbNxotcN">Get the deck — $1 on Square</a>
+      <a class="cta" data-checkout-sku="commit-copy-deck" href="https://square.link/u/dbNxotcN">Get the deck — $1 on Square</a>
     </div>
     <p class="fine-print">Success URL (optional): add <code>?thanks=1</code> when configuring the payment link return URL to mirror the Ship Kit funnel, e.g. <code>…/devtools/commits/?thanks=1</code>. Fulfillment is manual from our side until automated — same muscle as <a href="../automation/">/automation/</a>.</p>
 
@@ -155,6 +155,7 @@ docs(readme): clarify env vars for local Square stub</pre>
 <footer>
   <p>Tier <code>usd_1</code> in <code>payment-links.json</code>. Config lives in repo root alongside other Square URLs.</p>
 </footer>
+<script src="../js/checkout-resolve.js" defer></script>
 <script>
 (function () {
   try {

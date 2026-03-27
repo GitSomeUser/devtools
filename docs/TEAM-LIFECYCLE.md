@@ -20,7 +20,7 @@ This is the **purpose framing** for work that started in the **Overnight Diary**
 
 ## Principles
 - **Idea → dollars** beats idea → list.
-- **Payments:** **Generic by price** — one Square Payment Link per tier; buyers choose the offer that matches that price; no requirement for SKU memos at checkout.
+- **Payments:** **Production:** deploy the **fulfillment bridge** (see **`docs/SQUARE-FULFILLMENT.md`**) so each checkout carries `devtools:sku=` on the Square **Payment** + webhooks. **Fallback:** static tier links only when the bridge URL is unset (ambiguous product).
 - **Fulfillment:** **Immediate** once Square confirms payment (email to the address Square collects), unless a specific SKU doc states otherwise and matches reality.
 - **Naming:** **Possible Pipeline** is an **internal** phase name. **Public** copy uses normal product titles as published on the site.
 - **Artifacts:** Overnight outputs stay in Clawd history; **canonical buyer-facing** list is **`/pipeline/`** on Pages.
