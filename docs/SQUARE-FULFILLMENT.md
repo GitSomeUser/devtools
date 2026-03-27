@@ -13,7 +13,7 @@ Static **Payment Links** (one URL per price) do not record *which product* the b
 
 2. **Static site** — `payment-links.json` lists every slug under **`skus`** and sets **`checkout_bridge_base_url`** to your deployed Worker origin. **`js/checkout-resolve.js`** rewrites `a[data-checkout-sku]` to `GET https://<worker>/pay?sku=…&return_path=…`.
 
-3. **Webhook** — In the Square Developer Dashboard, subscribe **`payment.updated`** (and optionally **`payment.created`**) to **`https://<worker>/webhook`**. The Worker verifies **`x-square-hmacsha256-signature`**, then logs JSON including parsed **`devtools:sku=`** for each completed payment. Use Worker logs, or extend the Worker to POST into your queue / email / CRM.
+3. **Webhook** — In the Square Developer Dashboard, subscribe **`payment.updated`** (and optionally **`payment.created`**) to **`https://<worker>/webhook`**. The Worker verifies **`x-square-hmacsha256-signature`**, parses `devtools:sku=...`, and on **COMPLETED** payments sends fulfillment email automatically through Resend (if configured).
 
 Your **existing** Square Payment Links stay valid for manual use and for **fallback** when `checkout_bridge_base_url` is empty.
 
@@ -26,5 +26,5 @@ Your **existing** Square Payment Links stay valid for manual use and for **fallb
 
 ## Operations
 
-- **Fulfillment:** Use webhook logs (or Square Dashboard payment **note**) to see `devtools:sku=` before sending the deliverable.
+- **Fulfillment:** Automatic when Resend is configured (`RESEND_API_KEY` + `FULFILL_FROM_EMAIL`). Otherwise check webhook logs/payment note and send manually.
 - **Adding a product:** Add slug to `catalog.json`, `payment-links.json` skus, and an HTML `data-checkout-sku`; redeploy Worker.

@@ -5,6 +5,7 @@ compatibility_date = "2024-10-01"
 # Secrets (do not commit values):
 #   wrangler secret put SQUARE_ACCESS_TOKEN
 #   wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
+#   wrangler secret put RESEND_API_KEY
 # wrangler.toml vars (non-secret):
 # [vars]
 # SQUARE_ENVIRONMENT = "production"
@@ -13,6 +14,12 @@ compatibility_date = "2024-10-01"
 # PUBLIC_SITE_ORIGIN = "https://gitsomeuser.github.io"
 # PUBLIC_SITE_PATH_PREFIX = "/devtools"
 # SQUARE_API_VERSION = "2024-10-17"
+# FULFILL_FROM_EMAIL = "fulfillment@yourdomain.com"
+# FULFILL_TO_OVERRIDE_EMAIL = ""   # optional test override
+# Optional KV for duplicate-send protection:
+# [[kv_namespaces]]
+# binding = "FULFILLMENT_KV"
+# id = "REPLACE_WITH_KV_NAMESPACE_ID"
 [vars]
 SQUARE_ENVIRONMENT = "production"
 SQUARE_LOCATION_ID = "L0JDKBT4YJYX1"
@@ -20,3 +27,5 @@ SQUARE_WEBHOOK_NOTIFICATION_URL = "https://devtools-square-bridge.stratumsatoshi
 PUBLIC_SITE_ORIGIN = "https://gitsomeuser.github.io"
 PUBLIC_SITE_PATH_PREFIX = "/devtools"
 SQUARE_API_VERSION = "2024-10-17"
+FULFILL_FROM_EMAIL = "REPLACE_WITH_VERIFIED_RESEND_SENDER"
+FULFILL_TO_OVERRIDE_EMAIL = ""

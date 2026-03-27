@@ -5,6 +5,22 @@
 import catalog from '../catalog.json';
 
 const NOTE_PREFIX = catalog.payment_note_prefix || 'devtools:sku=';
+const DEFAULT_SITE = 'https://gitsomeuser.github.io/devtools';
+const SKU_DELIVERABLE_URL = {
+  'commit-copy-deck': `${DEFAULT_SITE}/commits/`,
+  'ship-kit': `${DEFAULT_SITE}/ship-kit/`,
+  'no-show-salvage-sms': `${DEFAULT_SITE}/automation/`,
+  'objection-crusher-voice-notes': `${DEFAULT_SITE}/automation/`,
+  'founder-call-debrief': `${DEFAULT_SITE}/automation/#cold-homepage-teardown`,
+  'google-review-recovery': `${DEFAULT_SITE}/`,
+  'cold-homepage-teardown': `${DEFAULT_SITE}/automation/#cold-homepage-teardown`,
+  'reply-rescue-pack': `${DEFAULT_SITE}/automation/#reply-rescue-pack`,
+  'client-magnet-one-pager': `${DEFAULT_SITE}/automation/#client-magnet-one-pager`,
+  'lost-deal-autopsy': `${DEFAULT_SITE}/`,
+  'inbox-triage-strike': `${DEFAULT_SITE}/automation/#inbox-triage-strike`,
+  'one-day-offer-stress-test': `${DEFAULT_SITE}/automation/#one-day-offer-stress-test`,
+  'micro-tip-usd1': `${DEFAULT_SITE}/`,
+};
 
 function squareHost(env) {
   return env.SQUARE_ENVIRONMENT === 'sandbox'
@@ -61,25 +77,84 @@ function extractSkuFromPaymentNote(note) {
   return m ? m[1].toLowerCase() : null;
 }
 
-/** Walk webhook JSON for payment-like objects with note + id + amount */
-function extractFulfillmentHints(obj, out = []) {
-  if (!obj || typeof obj !== 'object') return out;
-  if (typeof obj.note === 'string' && (obj.id || obj.payment_id)) {
-    const sku = extractSkuFromPaymentNote(obj.note);
-    if (sku) {
-      out.push({
-        sku,
-        payment_id: obj.id,
-        status: obj.status,
-        amount_money: obj.amount_money,
-        note: obj.note,
-      });
-    }
+function firstPaymentObject(payload) {
+  return payload?.data?.object?.payment || payload?.payment || null;
+}
+
+function siteRoot(env) {
+  const origin = (env.PUBLIC_SITE_ORIGIN || 'https://gitsomeuser.github.io').replace(/\/$/, '');
+  const path = (env.PUBLIC_SITE_PATH_PREFIX || '/devtools').replace(/\/$/, '');
+  return `${origin}${path}`;
+}
+
+function deliverableUrlForSku(sku, env) {
+  const base = siteRoot(env);
+  const hard = SKU_DELIVERABLE_URL[sku];
+  if (hard) return hard.replace(DEFAULT_SITE, base);
+  return `${base}/pipeline/#${sku}`;
+}
+
+async function sendFulfillmentEmail(env, data) {
+  if (!env.RESEND_API_KEY || !env.FULFILL_FROM_EMAIL || !data.to) {
+    return { sent: false, reason: 'missing resend config or recipient' };
   }
-  for (const v of Object.values(obj)) {
-    if (v && typeof v === 'object') extractFulfillmentHints(v, out);
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: env.FULFILL_FROM_EMAIL,
+      to: [data.to],
+      subject: data.subject,
+      text: data.text,
+    }),
+  });
+  const body = await response.text();
+  if (!response.ok) {
+    return { sent: false, reason: `resend ${response.status}`, body };
   }
-  return out;
+  return { sent: true, body };
+}
+
+async function seenPaymentBefore(env, paymentId) {
+  if (!env.FULFILLMENT_KV || !paymentId) return false;
+  const key = `fulfilled:${paymentId}`;
+  const existing = await env.FULFILLMENT_KV.get(key);
+  return !!existing;
+}
+
+async function markPaymentSeen(env, paymentId, sku) {
+  if (!env.FULFILLMENT_KV || !paymentId) return;
+  const key = `fulfilled:${paymentId}`;
+  await env.FULFILLMENT_KV.put(
+    key,
+    JSON.stringify({ sku, at: new Date().toISOString() }),
+    { expirationTtl: 60 * 60 * 24 * 30 }
+  );
+}
+
+function buildFulfillmentEmail(payment, sku, env) {
+  const product = catalog.skus?.[sku]?.square_line_name || sku;
+  const to = env.FULFILL_TO_OVERRIDE_EMAIL || payment.buyer_email_address || '';
+  const amount = payment.amount_money?.amount || 0;
+  const currency = payment.amount_money?.currency || 'USD';
+  const money = `${(amount / 100).toFixed(2)} ${currency}`;
+  const deliverableUrl = deliverableUrlForSku(sku, env);
+  const subject = `Your ${product} purchase (${money})`;
+  const text = [
+    `Thanks for your payment for ${product}.`,
+    '',
+    `SKU: ${sku}`,
+    `Payment ID: ${payment.id}`,
+    `Amount: ${money}`,
+    '',
+    `Deliverable / next step: ${deliverableUrl}`,
+    '',
+    'If you need anything adjusted, reply to this email.',
+  ].join('\n');
+  return { to, subject, text, deliverableUrl, product, money };
 }
 
 export default {
@@ -171,14 +246,32 @@ export default {
       }
 
       const type = payload.type || payload.event_type || '';
-      const hints = extractFulfillmentHints(payload);
-      const line = JSON.stringify({
+      const payment = firstPaymentObject(payload);
+      const sku = extractSkuFromPaymentNote(payment?.note || '');
+      const status = payment?.status || '';
+
+      const summary = {
         at: new Date().toISOString(),
         type,
-        fulfillment: hints,
         merchant_id: payload.merchant_id,
-      });
-      console.log(line);
+        payment_id: payment?.id || null,
+        sku: sku || null,
+        status: status || null,
+      };
+
+      if (sku && payment?.id && status === 'COMPLETED') {
+        const alreadyDone = await seenPaymentBefore(env, payment.id);
+        if (!alreadyDone) {
+          const email = buildFulfillmentEmail(payment, sku, env);
+          const result = await sendFulfillmentEmail(env, email);
+          await markPaymentSeen(env, payment.id, sku);
+          console.log(JSON.stringify({ ...summary, fulfillment_email: result, to: email.to, deliverable: email.deliverableUrl }));
+        } else {
+          console.log(JSON.stringify({ ...summary, skipped: 'already-fulfilled' }));
+        }
+      } else {
+        console.log(JSON.stringify({ ...summary, skipped: 'no-sku-or-not-completed' }));
+      }
 
       return new Response('', { status: 200 });
     }

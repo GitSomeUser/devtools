@@ -20,6 +20,7 @@ npm install
 npx wrangler deploy
 wrangler secret put SQUARE_ACCESS_TOKEN
 wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
+wrangler secret put RESEND_API_KEY
 ```
 
 Non-secret vars (Dashboard → Worker → Settings → Variables) or in `wrangler.toml` `[vars]`:
@@ -31,6 +32,8 @@ Non-secret vars (Dashboard → Worker → Settings → Variables) or in `wrangle
 | `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://devtools-square-bridge.account.workers.dev/webhook` |
 | `PUBLIC_SITE_ORIGIN` | `https://gitsomeuser.github.io` |
 | `PUBLIC_SITE_PATH_PREFIX` | `/devtools` |
+| `FULFILL_FROM_EMAIL` | `fulfillment@yourdomain.com` (must be verified in Resend) |
+| `FULFILL_TO_OVERRIDE_EMAIL` | optional test override recipient |
 
 ## Connect the static site
 
@@ -48,12 +51,22 @@ Pages load **`js/checkout-resolve.js`**, which rewrites `a[data-checkout-sku]` t
 
 **`catalog.json`** (this folder) must stay aligned with **`payment-links.json` → `skus`** (tiers + client fallbacks). When adding a product, update both and redeploy the Worker.
 
+## Automatic fulfillment emails (Resend)
+
+When webhook receives a **COMPLETED** payment with note `devtools:sku=<slug>`, the worker now sends an email automatically via Resend:
+
+- recipient: `buyer_email_address` from Square payment (or `FULFILL_TO_OVERRIDE_EMAIL` if set)
+- subject/body: includes SKU, payment ID, amount, and deliverable URL
+- if `RESEND_API_KEY` / `FULFILL_FROM_EMAIL` are missing, it logs a skip reason (no email sent)
+
+Optional hardening:
+
+- add a KV namespace bound as `FULFILLMENT_KV` to deduplicate webhook retries (see `wrangler.toml` comments)
+
 ## Webhook log line
 
 Each valid notification logs one JSON line to the Worker tail, e.g.:
 
 ```json
-{"at":"…","type":"payment.updated","fulfillment":[{"sku":"reply-rescue-pack","payment_id":"…","status":"COMPLETED",…}]}
+{"at":"…","type":"payment.updated","sku":"reply-rescue-pack","status":"COMPLETED","fulfillment_email":{"sent":true,...}}
 ```
-
-Hook this later to email, Slack, Airtable, or a queue—without changing Square dashboard links.
