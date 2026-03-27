@@ -77,16 +77,16 @@ footer a { color: var(--link); }
   <h1><span>devtools</span> — curated micro-offers</h1>
 </header>
 <main>
-  <p class="lead">Checkout buttons load <code>payment-links.json</code>: when <code>checkout_bridge_base_url</code> is set, each buy goes through the <strong>fulfillment bridge</strong> (Cloudflare Worker) so Square records a payment with <code>devtools:sku=…</code> on the transaction. That matches <strong>webhook payloads</strong> to the exact product. If the bridge URL is empty, the page falls back to the static <strong>tier</strong> link (amount only).</p>
+  <p class="lead"><code>payment-links.json</code> drives buttons: with <code>checkout_bridge_base_url</code> set, <code>data-checkout-sku</code> links hit the Worker <code>/pay</code> mint (exact cents + line name + <code>devtools:sku=…</code> on the payment). Empty bridge URL → static tier link only. Webhook matches SKU to KV <code>product:&lt;sku&gt;</code>.</p>
 
-  <div class="delivery"><strong>Delivery:</strong> email as soon as Square confirms payment. <strong>Setup:</strong> <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/SQUARE-FULFILLMENT.md">docs/SQUARE-FULFILLMENT.md</a></div>
+  <div class="delivery"><strong>Delivery:</strong> email when Square completes. <strong>Ops:</strong> <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/SQUARE-FULFILLMENT.md">SQUARE-FULFILLMENT.md</a> · <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/STORE-OPEN-PLAYBOOK.md">STORE-OPEN-PLAYBOOK.md</a></div>
 
   <section class="sku" id="iter-17">
     <h2>No-Show Salvage SMS Pack</h2>
     <p class="meta">$15 · <code>usd_15</code> · sku <code>no-show-salvage-sms</code></p>
     <p>For people who run appointments and lose money to no-shows. Copy-paste texts + timing ideas to recover bookings.</p>
     <a class="pay" data-checkout-sku="no-show-salvage-sms" href="https://square.link/u/vrnZ4R19">Pay $15 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-17">On this page</a>
   </section>
 
   <section class="sku" id="iter-16">
@@ -94,7 +94,7 @@ footer a { color: var(--link); }
     <p class="meta">$35 · <code>usd_35</code> · sku <code>founder-call-debrief</code></p>
     <p>After a sales or discovery call: turn messy notes into a clean debrief, follow-up messages, and objection map—fixed scope.</p>
     <a class="pay" data-checkout-sku="founder-call-debrief" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-16">On this page</a>
   </section>
 
   <section class="sku" id="iter-18">
@@ -102,6 +102,7 @@ footer a { color: var(--link); }
     <p class="meta">$35 · <code>usd_35</code> · sku <code>google-review-recovery</code></p>
     <p>For local businesses with a fresh bad review: response variants (public, private, escalation) you can adapt fast.</p>
     <a class="pay" data-checkout-sku="google-review-recovery" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a>
+    <a class="secondary" href="#iter-18">On this page</a>
     <a class="secondary" href="../">Hub</a>
   </section>
 
@@ -110,7 +111,7 @@ footer a { color: var(--link); }
     <p class="meta">$35 · <code>usd_35</code> · sku <code>cold-homepage-teardown</code></p>
     <p>For sites getting traffic but not converting: structured homepage teardown and concrete change list.</p>
     <a class="pay" data-checkout-sku="cold-homepage-teardown" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-13">On this page</a>
   </section>
 
   <section class="sku" id="iter-14">
@@ -118,7 +119,7 @@ footer a { color: var(--link); }
     <p class="meta">$79 · <code>usd_79</code> · sku <code>inbox-triage-strike</code></p>
     <p>Warm leads stalling in the inbox: triage map, send-ready replies, short follow-up plan.</p>
     <a class="pay" data-checkout-sku="inbox-triage-strike" href="https://square.link/u/qon190ju">Pay $79 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-14">On this page</a>
   </section>
 
   <section class="sku" id="iter-10">
@@ -126,7 +127,7 @@ footer a { color: var(--link); }
     <p class="meta">$199 · <code>usd_199</code> · sku <code>one-day-offer-stress-test</code></p>
     <p>High-trust audit: stress-test one offer (headline, promise, scope, objection handling)—best for owners ready to pay for blunt feedback.</p>
     <a class="pay" data-checkout-sku="one-day-offer-stress-test" href="https://square.link/u/eHyzQOeb">Pay $199 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-10">On this page</a>
   </section>
 
   <section class="sku" id="iter-11">
@@ -134,7 +135,7 @@ footer a { color: var(--link); }
     <p class="meta">$35 · <code>usd_35</code> · sku <code>reply-rescue-pack</code></p>
     <p>When replies are late and warm leads cool off: rescue pack of reply patterns and a short execution checklist.</p>
     <a class="pay" data-checkout-sku="reply-rescue-pack" href="https://square.link/u/d8Hz3Y7d">Pay $35 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-11">On this page</a>
   </section>
 
   <section class="sku" id="iter-12">
@@ -142,7 +143,7 @@ footer a { color: var(--link); }
     <p class="meta">$15 · <code>usd_15</code> · sku <code>objection-crusher-voice-notes</code></p>
     <p>Quick turnaround (delivered as written notes/scripts) to handle common objections before they kill the deal.</p>
     <a class="pay" data-checkout-sku="objection-crusher-voice-notes" href="https://square.link/u/vrnZ4R19">Pay $15 on Square</a>
-    <a class="secondary" href="../automation/">Full spec</a>
+    <a class="secondary" href="#iter-12">On this page</a>
   </section>
 
   <section class="sku" id="commit-copy-deck">

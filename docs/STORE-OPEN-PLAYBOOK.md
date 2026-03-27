@@ -27,7 +27,7 @@ This playbook is the **rails** that let Diary → Pipeline offers **accept money
 A **Cloudflare Worker** (“fulfillment bridge”) uses Square’s **Create Payment Link API** to mint a **fresh checkout** per click:
 
 - **`payment_note`** is set to `devtools:sku=<slug>` (bounded length; appears on the **Payment** in Square and in **webhooks**).
-- **`quick_pay`** sets human-readable line name and exact **amount in cents** from **`fulfillment-bridge/catalog.json`**.
+- **`quick_pay`** sets human-readable line name and exact **amount in cents** from repo-root **`payment-links.json`** (same **`skus`** map the Pages site uses).
 
 Static **dashboard links remain** as **fallback** when `checkout_bridge_base_url` is empty.
 
@@ -66,7 +66,7 @@ Square posts a signed payload to **`POST /webhook`**. The Worker:
 Buyer-facing HTML is public; **paid file bodies** should not be. We store them in **Cloudflare Worker KV**:
 
 - Key: **`product:<sku>`** — full markdown (or text) body.
-- Worker attaches **`.md`** via Resend **attachments** (base64) and duplicates content in plain-text body for redundancy.
+- Worker attaches **`.md`** via Resend **attachments** (base64). Plain-text body stays short when an attachment exists (buyers open the file or the hub link).
 
 **Operational rule:** When you add a SKU, **upload** the private file:
 
@@ -77,7 +77,7 @@ npx wrangler kv key put "product:<sku>" --binding=DELIVERABLES --path=$HOME/claw
 
 ### 1.8 Idempotency
 
-Same webhook can be delivered more than once. The Worker writes **`fulfilled:<payment_id>`** to KV (TTL ~30 days) before/after send logic — **do not double-email** on retries.
+Same webhook can be delivered more than once. The Worker writes **`fulfilled:<payment_id>`** to KV **only after Resend succeeds**, so failed sends can retry and successful sends still dedupe.
 
 ---
 
@@ -90,8 +90,8 @@ Buyer → GitHub Pages (data-checkout-sku)
      → Buyer pays → Square Payment COMPLETED
      → Square webhook POST /webhook
      → Verify signature → read sku + payment id
-     → KV get product:<sku> → Resend email (attachment + text)
-     → KV put fulfilled:<payment_id>
+     → KV get product:<sku> → Resend email (attachment + short text)
+     → (if send ok) KV put fulfilled:<payment_id>
 ```
 
 ---
@@ -100,9 +100,9 @@ Buyer → GitHub Pages (data-checkout-sku)
 
 | Path | Role |
 |------|------|
-| `payment-links.json` | `checkout_bridge_base_url`, `skus`, `tiers`, donation |
+| `payment-links.json` | `checkout_bridge_base_url`, `skus` (tier + `amount_cents` + `square_line_name`), `tiers`, donation — **Worker imports this file** |
 | `js/checkout-resolve.js` | Rewrites checkout links client-side |
-| `fulfillment-bridge/catalog.json` | Worker: cents + Square line name per **slug** (must align with `payment-links.json` skus) |
+| `scripts/verify-skus.mjs` | Asserts each sku’s `amount_cents` matches its tier |
 | `fulfillment-bridge/src/index.js` | `/pay`, `/webhook`, `/health`, Resend, KV |
 | `fulfillment-bridge/wrangler.toml` | Vars + `DELIVERABLES` KV binding |
 | `docs/SQUARE-FULFILLMENT.md` | Short architecture summary |
@@ -319,7 +319,7 @@ npx wrangler kv key put "product:commit-copy-deck" --binding=DELIVERABLES \
 Rules:
 
 - Key **must** be `product:<sku>` where `<sku>` equals:
-  - `catalog.json` / Worker `SKUS` entries
+  - `payment-links.json` → `skus` keys
   - HTML `data-checkout-sku`
 - After updating a file, **re-run** `kv key put` (no redeploy needed unless Worker code changed).
 
@@ -328,13 +328,12 @@ Rules:
 ## 10. Adding a new product (repeatable checklist)
 
 1. **Business:** name, price, promise, fulfillment SLO (still “immediate” unless you change policy).
-2. **`fulfillment-bridge/catalog.json`:** add `{ amount_cents, currency, square_line_name }` under slug.
-3. **`payment-links.json` → `skus`:** add `{ tier, square_line_name }` for same slug.
-4. **HTML:** add card/button with `data-checkout-sku="<slug>"` and tier fallback `href`.
-5. **KV:** `wrangler kv key put "product:<slug>" --binding=DELIVERABLES --path=…`
-6. **`docs/TEAM-LIFECYCLE` / hub:** optional copy updates.
-7. **Deploy** if Worker code unchanged, only KV + JSON + HTML — push site; **`npx wrangler deploy`** only if Worker/wr changed.
-8. **Test:** pay smallest SKU, verify Square **note**, Resend **attachment**, dedup on replay.
+2. **`payment-links.json` → `skus`:** add `{ tier, amount_cents, square_line_name }` (run `node scripts/verify-skus.mjs`).
+3. **HTML:** add card/button with `data-checkout-sku="<slug>"` and tier fallback `href`.
+4. **KV:** `wrangler kv key put "product:<slug>" --binding=DELIVERABLES --path=…`
+5. **`docs/TEAM-LIFECYCLE` / hub:** optional copy updates.
+6. **Deploy:** push site; **`npx wrangler deploy`** so the Worker bundles the updated `payment-links.json`.
+7. **Test:** pay smallest SKU, verify Square **note**, Resend **attachment**, dedup on replay, **replay webhook after a forced Resend failure** still delivers once a send succeeds.
 
 ---
 
@@ -368,7 +367,7 @@ Rules:
 
 Use this verbatim to reproduce the stack on a fresh machine/repo (adjust names):
 
-> Build a static micro-store on GitHub Pages with: (1) `payment-links.json` listing tiers + `skus` + `checkout_bridge_base_url`; (2) `js/checkout-resolve.js` rewriting `data-checkout-sku` links to a Cloudflare Worker; (3) Worker routes `GET /pay` calling Square `CreatePaymentLink` with `quick_pay` from `catalog.json` and `payment_note=devtools:sku=<slug>`; (4) `POST /webhook` verifying `x-square-hmacsha256-signature` with Square’s URL+body rule, parsing payment `note`, on `COMPLETED` loading `product:<sku>` from KV, attaching via Resend, and deduping with `fulfilled:<payment_id>`; (5) Resend domain verified + `RESEND_API_KEY` secret + `FULFILL_FROM_EMAIL`; (6) document repeatable SKU onboarding (catalog, payment-links, HTML, KV put). Follow `docs/STORE-OPEN-PLAYBOOK.md` in the `devtools` repo for exhaustive steps.
+> Build a static micro-store on GitHub Pages with: (1) `payment-links.json` listing tiers + `skus` (each with `amount_cents`, `square_line_name`, `tier`) + `checkout_bridge_base_url`; (2) `js/checkout-resolve.js` rewriting `data-checkout-sku` links to a Cloudflare Worker; (3) Worker routes `GET /pay` calling Square `CreatePaymentLink` with `quick_pay` from that same `payment-links.json` and `payment_note=devtools:sku=<slug>`; (4) `POST /webhook` verifying `x-square-hmacsha256-signature`, on `COMPLETED` loading `product:<sku>` from KV, sending via Resend with attachment when present, and writing `fulfilled:<payment_id>` only after a successful send; (5) Resend verified + secrets; (6) `scripts/verify-skus.mjs` + playbook for onboarding. Follow `docs/STORE-OPEN-PLAYBOOK.md`.
 
 ---
 

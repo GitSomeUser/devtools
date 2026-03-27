@@ -1,26 +1,12 @@
 /**
  * Devtools Square bridge: SKU-aware checkout + webhook fulfillment signals.
  * Deploy to Cloudflare Workers (see README.md). No changes to existing Square dashboard links — uses Checkout API to mint one-off payment links.
+ * Canonical money + line names: repo-root payment-links.json (Square-friendly pointer file).
  */
-import catalog from '../catalog.json';
+import paymentLinks from '../../payment-links.json';
 
-const NOTE_PREFIX = catalog.payment_note_prefix || 'devtools:sku=';
-const DEFAULT_SITE = 'https://gitsomeuser.github.io/devtools';
-const SKU_DELIVERABLE_URL = {
-  'commit-copy-deck': `${DEFAULT_SITE}/commits/`,
-  'ship-kit': `${DEFAULT_SITE}/ship-kit/`,
-  'no-show-salvage-sms': `${DEFAULT_SITE}/automation/`,
-  'objection-crusher-voice-notes': `${DEFAULT_SITE}/automation/`,
-  'founder-call-debrief': `${DEFAULT_SITE}/automation/#cold-homepage-teardown`,
-  'google-review-recovery': `${DEFAULT_SITE}/`,
-  'cold-homepage-teardown': `${DEFAULT_SITE}/automation/#cold-homepage-teardown`,
-  'reply-rescue-pack': `${DEFAULT_SITE}/automation/#reply-rescue-pack`,
-  'client-magnet-one-pager': `${DEFAULT_SITE}/automation/#client-magnet-one-pager`,
-  'lost-deal-autopsy': `${DEFAULT_SITE}/`,
-  'inbox-triage-strike': `${DEFAULT_SITE}/automation/#inbox-triage-strike`,
-  'one-day-offer-stress-test': `${DEFAULT_SITE}/automation/#one-day-offer-stress-test`,
-  'micro-tip-usd1': `${DEFAULT_SITE}/`,
-};
+const NOTE_PREFIX = paymentLinks.payment_note_prefix || 'devtools:sku=';
+const DEFAULT_CCY = paymentLinks.currency || 'USD';
 
 function squareHost(env) {
   return env.SQUARE_ENVIRONMENT === 'sandbox'
@@ -73,7 +59,10 @@ function normalizeReturnUrl(request, returnPath, env) {
 
 function extractSkuFromPaymentNote(note) {
   if (!note || typeof note !== 'string') return null;
-  const m = note.match(/devtools:sku=([a-z0-9-]+)/i);
+  const idx = note.indexOf(NOTE_PREFIX);
+  if (idx === -1) return null;
+  const rest = note.slice(idx + NOTE_PREFIX.length);
+  const m = rest.match(/^([a-z0-9-]+)/i);
   return m ? m[1].toLowerCase() : null;
 }
 
@@ -87,11 +76,12 @@ function siteRoot(env) {
   return `${origin}${path}`;
 }
 
+/** Human page: most SKUs → pipeline; narrow exceptions stay explicit */
 function deliverableUrlForSku(sku, env) {
   const base = siteRoot(env);
-  const hard = SKU_DELIVERABLE_URL[sku];
-  if (hard) return hard.replace(DEFAULT_SITE, base);
-  return `${base}/pipeline/#${sku}`;
+  if (sku === 'commit-copy-deck') return `${base}/commits/`;
+  if (sku === 'ship-kit') return `${base}/ship-kit/`;
+  return `${base}/pipeline/`;
 }
 
 /** Base64 (UTF-8) for Resend attachment bodies */
@@ -163,46 +153,48 @@ async function loadDeliverableBody(env, sku) {
 }
 
 async function buildFulfillmentEmail(payment, sku, env) {
-  const product = catalog.skus?.[sku]?.square_line_name || sku;
+  const def = paymentLinks.skus?.[sku];
+  const product = def?.square_line_name || sku;
   const to = env.FULFILL_TO_OVERRIDE_EMAIL || payment.buyer_email_address || '';
   const amount = payment.amount_money?.amount || 0;
-  const currency = payment.amount_money?.currency || 'USD';
+  const currency = payment.amount_money?.currency || DEFAULT_CCY;
   const money = `${(amount / 100).toFixed(2)} ${currency}`;
   const deliverableUrl = deliverableUrlForSku(sku, env);
   const subject = `Your ${product} purchase (${money})`;
   const bodyMd = await loadDeliverableBody(env, sku);
   const hasBody = !!(bodyMd && bodyMd.trim());
 
-  const headerLines = [
+  const sharedHead = [
     `Thanks for your payment for ${product}.`,
     '',
     `SKU: ${sku}`,
     `Payment ID: ${payment.id}`,
     `Amount: ${money}`,
     '',
-    hasBody
-      ? 'Your purchased file is attached. You can also use the link below.'
-      : 'We will send the full file as soon as it is loaded into fulfillment storage. Until then, use this page:',
-    '',
-    `Link: ${deliverableUrl}`,
-    '',
-    'If you need anything adjusted, reply to this email.',
   ];
 
   const text = hasBody
-    ? [...headerLines, '', '---', '', 'PLAIN TEXT COPY (same as attachment)', '', bodyMd.trim()].join('\n')
-    : headerLines.join('\n');
+    ? [
+        ...sharedHead,
+        'Your file is attached (.md). Browser copy lives here:',
+        '',
+        deliverableUrl,
+        '',
+        'Reply if you need anything.',
+      ].join('\n')
+    : [
+        ...sharedHead,
+        'We will send the full file as soon as it is loaded into fulfillment storage. Until then:',
+        '',
+        deliverableUrl,
+        '',
+        'If you need anything adjusted, reply to this email.',
+      ].join('\n');
 
   const attachments = [];
   if (hasBody) {
-    const filename =
-      sku === 'commit-copy-deck'
-        ? 'commit-copy-deck.md'
-        : sku === 'ship-kit'
-          ? 'ship-kit.md'
-          : `${sku}.md`;
     attachments.push({
-      filename,
+      filename: `${sku}.md`,
       content: base64Utf8(bodyMd),
     });
   }
@@ -229,7 +221,7 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/pay') {
       const sku = (url.searchParams.get('sku') || '').toLowerCase().trim();
-      const def = catalog.skus[sku];
+      const def = paymentLinks.skus?.[sku];
       if (!def) {
         return new Response(`Unknown sku: ${sku}`, { status: 400 });
       }
@@ -241,6 +233,7 @@ export default {
       const redirect = normalizeReturnUrl(request, returnPath, env);
       const paymentNote = `${NOTE_PREFIX}${sku}`.slice(0, 500);
       const idempotencyKey = crypto.randomUUID();
+      const ccy = def.currency || DEFAULT_CCY;
 
       const body = {
         idempotency_key: idempotencyKey,
@@ -249,7 +242,7 @@ export default {
           name: def.square_line_name.slice(0, 255),
           price_money: {
             amount: Number(def.amount_cents),
-            currency: def.currency || 'USD',
+            currency: ccy,
           },
           location_id: env.SQUARE_LOCATION_ID,
         },
@@ -326,7 +319,9 @@ export default {
         if (!alreadyDone) {
           const email = await buildFulfillmentEmail(payment, sku, env);
           const result = await sendFulfillmentEmail(env, email);
-          await markPaymentSeen(env, payment.id, sku);
+          if (result.sent) {
+            await markPaymentSeen(env, payment.id, sku);
+          }
           console.log(
             JSON.stringify({
               ...summary,

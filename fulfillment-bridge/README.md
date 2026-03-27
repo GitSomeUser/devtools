@@ -47,17 +47,17 @@ In repo root **`payment-links.json`**, set:
 
 Pages load **`js/checkout-resolve.js`**, which rewrites `a[data-checkout-sku]` to `GET /pay?sku=…&return_path=…`.
 
-## SKU catalog
+## SKU pointers
 
-**`catalog.json`** (this folder) must stay aligned with **`payment-links.json` → `skus`** (tiers + client fallbacks). When adding a product, update both and redeploy the Worker.
+The Worker imports repo-root **`payment-links.json`** (same file the static site uses). Each **`skus`** entry must include **`tier`**, **`amount_cents`**, and **`square_line_name`**. After edits, run **`node scripts/verify-skus.mjs`** from the repo root, then **`npx wrangler deploy`**.
 
 ## Automatic fulfillment emails (Resend)
 
 When webhook receives a **COMPLETED** payment with note `devtools:sku=<slug>`, the worker sends email via Resend:
 
 - recipient: `buyer_email_address` from Square (or `FULFILL_TO_OVERRIDE_EMAIL` if set)
-- **Attachment:** if KV has `product:<slug>` (markdown body), that file is attached and inlined in plain text; otherwise the email explains the fallback link only
-- **Dedup:** `fulfilled:<payment_id>` stored in the same `DELIVERABLES` KV namespace (30-day TTL) so webhook retries do not double-send
+- **Attachment:** if KV has `product:<slug>` (markdown body), that file is attached; the plain-text body stays short (no duplicate paste of the file). Otherwise the email is link-only until KV is loaded.
+- **Dedup:** `fulfilled:<payment_id>` is written **only after Resend returns success**, so a failed send can retry on the next webhook delivery.
 
 ### Loading private deliverables (KV)
 
@@ -69,7 +69,7 @@ npx wrangler kv key put "product:commit-copy-deck" --binding=DELIVERABLES --path
 npx wrangler kv key put "product:ship-kit" --binding=DELIVERABLES --path=$HOME/clawd/overnight/paid-kit-usd15-v1.md
 ```
 
-Add more SKUs the same way (`product:<sku>` must match `catalog.json` / site `data-checkout-sku`).
+Add more SKUs the same way (`product:<sku>` must match **`payment-links.json`** and site `data-checkout-sku`).
 
 If `RESEND_API_KEY` / `FULFILL_FROM_EMAIL` are missing, no email is sent (logged).
 
