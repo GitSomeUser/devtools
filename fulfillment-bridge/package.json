@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
+    "dev": "wrangler dev",
+    "verify": "node ../scripts/verify-skus.mjs"
   },
   "devDependencies": {
     "wrangler": "^3.99.0"

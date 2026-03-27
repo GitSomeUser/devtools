@@ -13,7 +13,7 @@
 | `payment-links.json` | Bridge URL, `skus` (`tier`, `amount_cents`, `square_line_name`), `tiers`, `payment_note_prefix` |
 | `js/checkout-resolve.js` | Rewrites checkout anchors |
 | `fulfillment-bridge/` | Worker + `wrangler.toml` |
-| `scripts/verify-skus.mjs` | Run after JSON edits: `node scripts/verify-skus.mjs` |
+| `scripts/verify-skus.mjs` | Tier cents + **every SKU has `data-checkout-sku` in some `.html`** |
 
 ## Prerequisites
 
