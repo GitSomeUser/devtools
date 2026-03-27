@@ -31,4 +31,4 @@ This is the **purpose framing** for work that started in the **Overnight Diary**
 | `https://gitsomeuser.github.io/devtools/pipeline/` | Public **curated micro-offers** library (fed by internal “Possible Pipeline” phase) |
 | `~/clawd/overnight/` | Overnight experiment trace (diary, drafts) |
 | `~/clawd/team-purpose.md` | Local pointer to this lifecycle + phases |
-| `payment-links.json` | Canonical Square URLs per tier |
+| `payment-links.json` | Tiers + SKUs (`amount_cents`, names); Worker + Pages share this file |

@@ -122,8 +122,8 @@ footer a:hover { text-decoration: underline; }
     <div class="cta-row">
       <a class="cta cta-primary" href="../pipeline/">Open the offer library</a>
     </div>
-    <p class="fine-print">After payment, webhook fulfillment loads <code>product:&lt;sku&gt;</code> from KV and emails via Resend. Duplicates are blocked only <em>after</em> a successful send so failed mail can retry.</p>
-    <p class="secondary-links"><a href="../commits/">$1 Commit Copy Deck</a> · <a href="../ship-kit/">$15 Ship Kit</a> · <a href="https://square.link/u/dbNxotcN" data-checkout-sku="micro-tip-usd1">$1 micro-tip</a> · <a href="https://square.link/u/7B1EWkBj">donate</a> · Ops: <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/STORE-OPEN-PLAYBOOK.md">STORE-OPEN-PLAYBOOK</a></p>
+    <p class="fine-print">Webhook → KV <code>product:&lt;sku&gt;</code> → Resend; dedupe after successful send. Worker bundles <code>payment-links.json</code> — run <code>node scripts/verify-skus.mjs</code> after edits.</p>
+    <p class="secondary-links"><a href="../commits/">$1 deck</a> · <a href="../ship-kit/">Ship Kit</a> · <a href="https://square.link/u/dbNxotcN" data-checkout-sku="micro-tip-usd1">$1 tip</a> · <a href="https://square.link/u/7B1EWkBj">donate</a> · <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/SQUARE-FULFILLMENT.md">Docs</a></p>
   </section>
 
   <details class="card">
@@ -137,11 +137,6 @@ footer a:hover { text-decoration: underline; }
       <div class="tier"><span>Donation</span><a class="cta donate" href="https://square.link/u/7B1EWkBj">Donate</a></div>
     </div>
   </details>
-
-  <section class="card">
-    <h2>Developer notes</h2>
-    <p class="lead" style="margin-bottom:0">Worker imports <code>payment-links.json</code> for <code>amount_cents</code> and <code>square_line_name</code> — one file with Pages and Square. Verify after edits: <code>node scripts/verify-skus.mjs</code>.</p>
-  </section>
 </main>
 <footer>
   <p>Hub: <a href="https://gitsomeuser.github.io/devtools/">devtools index</a> · Fulfillment: <a href="https://github.com/GitSomeUser/devtools/blob/main/docs/SQUARE-FULFILLMENT.md">SQUARE-FULFILLMENT.md</a></p>

@@ -28,3 +28,5 @@ Your **existing** Square Payment Links stay valid for manual use and for **fallb
 
 - **Fulfillment:** Automatic when Resend is configured (`RESEND_API_KEY` + `FULFILL_FROM_EMAIL`). Private file bodies live in **Worker KV** under `product:<sku>` (see `fulfillment-bridge/README.md`). SKUs without KV content still get the link-only email until you upload the markdown.
 - **Adding a product:** Extend **`payment-links.json` → `skus`**, add **`data-checkout-sku`** on the page, KV `product:<slug>` if needed; redeploy Worker so it bundles the updated JSON.
+
+**Checklist (bootstrap, new SKU, smoke):** `docs/STORE-OPEN-PLAYBOOK.md`

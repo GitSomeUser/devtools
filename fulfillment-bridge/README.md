@@ -1,82 +1,45 @@
-# Square fulfillment bridge (Cloudflare Worker)
+# Fulfillment bridge (Cloudflare Worker)
 
-**Problem:** Static Payment Links only tell you the **price tier**, not **which product** the buyer intended. This Worker **mints a one-time Square checkout** per click via the **Create Payment Link API**, stamps `payment_note` with `devtools:sku=<slug>`, and exposes **`POST /webhook`** so you can trust Square notifications and route fulfillment by SKU—**without replacing** your existing dashboard links for manual use.
+Mints Square **Payment Link** per click (`CreatePaymentLink`): line + cents from repo-root **`payment-links.json`** (imported at deploy). Stamps `payment_note` using **`payment_note_prefix`** + slug. **`POST /webhook`** verifies signature, sends Resend mail, writes **`fulfilled:<payment_id>`** only after a successful send.
 
-## What you configure (Square Developer Console)
+**Concept:** `docs/SQUARE-FULFILLMENT.md`
 
-1. Create or reuse an application with **Sandbox** or **Production** access token (scoped for online checkout: `PAYMENTS_WRITE`, `ORDERS_WRITE`, `ORDERS_READ`).
-2. **Locations:** copy **Location ID** → `SQUARE_LOCATION_ID`.
-3. **Webhooks:** add subscription  
-   - URL: `https://<worker-host>/webhook` (must match `SQUARE_WEBHOOK_NOTIFICATION_URL` **exactly**, including path)  
-   - Events: at minimum `payment.updated` (and optionally `payment.created`).  
-   - Copy **signature key** → `SQUARE_WEBHOOK_SIGNATURE_KEY`.
-4. **Allowed redirect URLs** (for hosted checkout): add your Pages origin + path, e.g. `https://gitsomeuser.github.io/devtools/pipeline` and `/devtools/automation`, or use a single `…/devtools/` prefix if Square allows.
+## Square dashboard
 
-## Deploy (Cloudflare)
+Production token → **`wrangler secret put SQUARE_ACCESS_TOKEN`** (never commit). Location ID in `[vars]`. Webhook URL **`https://<worker>/webhook`** — same string as **`SQUARE_WEBHOOK_NOTIFICATION_URL`**. **`wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY`**. Allow hosted-checkout redirects for your Pages origin paths.
+
+## Deploy
 
 ```bash
 cd fulfillment-bridge
 npm install
 npx wrangler deploy
-wrangler secret put SQUARE_ACCESS_TOKEN
-wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
-wrangler secret put RESEND_API_KEY
+npx wrangler secret put SQUARE_ACCESS_TOKEN
+npx wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
+npx wrangler secret put RESEND_API_KEY
 ```
 
-Non-secret vars (Dashboard → Worker → Settings → Variables) or in `wrangler.toml` `[vars]`:
+## Vars (non-secret)
 
 | Name | Example |
 |------|---------|
-| `SQUARE_ENVIRONMENT` | `production` or `sandbox` |
-| `SQUARE_LOCATION_ID` | `Lxxxxxxxxxxxxx` |
-| `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://devtools-square-bridge.account.workers.dev/webhook` |
+| `SQUARE_ENVIRONMENT` | `production` |
+| `SQUARE_LOCATION_ID` | `L…` |
+| `SQUARE_WEBHOOK_NOTIFICATION_URL` | `https://….workers.dev/webhook` |
 | `PUBLIC_SITE_ORIGIN` | `https://gitsomeuser.github.io` |
 | `PUBLIC_SITE_PATH_PREFIX` | `/devtools` |
-| `FULFILL_FROM_EMAIL` | `fulfillment@yourdomain.com` (must be verified in Resend) |
-| `FULFILL_TO_OVERRIDE_EMAIL` | optional test override recipient |
+| `SQUARE_API_VERSION` | `2024-10-17` |
+| `FULFILL_FROM_EMAIL` | Resend-verified sender |
+| `FULFILL_TO_OVERRIDE_EMAIL` | Optional test inbox |
 
-## Connect the static site
+## Site + Worker sync
 
-In repo root **`payment-links.json`**, set:
+Edit **`payment-links.json`** at repo root → `node ../scripts/verify-skus.mjs` → **`npx wrangler deploy`**.
 
-```json
-"checkout_bridge_base_url": "https://devtools-square-bridge.account.workers.dev"
-```
-
-(omit or `""` to keep using static tier links only.)
-
-Pages load **`js/checkout-resolve.js`**, which rewrites `a[data-checkout-sku]` to `GET /pay?sku=…&return_path=…`.
-
-## SKU pointers
-
-The Worker imports repo-root **`payment-links.json`** (same file the static site uses). Each **`skus`** entry must include **`tier`**, **`amount_cents`**, and **`square_line_name`**. After edits, run **`node scripts/verify-skus.mjs`** from the repo root, then **`npx wrangler deploy`**.
-
-## Automatic fulfillment emails (Resend)
-
-When webhook receives a **COMPLETED** payment with note `devtools:sku=<slug>`, the worker sends email via Resend:
-
-- recipient: `buyer_email_address` from Square (or `FULFILL_TO_OVERRIDE_EMAIL` if set)
-- **Attachment:** if KV has `product:<slug>` (markdown body), that file is attached; the plain-text body stays short (no duplicate paste of the file). Otherwise the email is link-only until KV is loaded.
-- **Dedup:** `fulfilled:<payment_id>` is written **only after Resend returns success**, so a failed send can retry on the next webhook delivery.
-
-### Loading private deliverables (KV)
-
-Source files stay off the public repo (e.g. under `~/clawd/overnight/`). Push bytes into KV:
+## KV deliverables
 
 ```bash
-cd fulfillment-bridge
-npx wrangler kv key put "product:commit-copy-deck" --binding=DELIVERABLES --path=$HOME/clawd/overnight/commit-copy-deck-deliverable.md
-npx wrangler kv key put "product:ship-kit" --binding=DELIVERABLES --path=$HOME/clawd/overnight/paid-kit-usd15-v1.md
+npx wrangler kv key put "product:<sku>" --binding=DELIVERABLES --path=/path/to/body.md
 ```
 
-Add more SKUs the same way (`product:<sku>` must match **`payment-links.json`** and site `data-checkout-sku`).
-
-If `RESEND_API_KEY` / `FULFILL_FROM_EMAIL` are missing, no email is sent (logged).
-
-## Webhook log line
-
-Each valid notification logs one JSON line to the Worker tail, e.g.:
-
-```json
-{"at":"…","type":"payment.updated","sku":"reply-rescue-pack","status":"COMPLETED","fulfillment_email":{"sent":true,...}}
-```
+Tail logs in Cloudflare dashboard; each webhook emits one JSON line (`fulfillment_email.sent`, etc.).
