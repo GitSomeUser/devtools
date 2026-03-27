@@ -27,5 +27,5 @@ SQUARE_WEBHOOK_NOTIFICATION_URL = "https://devtools-square-bridge.stratumsatoshi
 PUBLIC_SITE_ORIGIN = "https://gitsomeuser.github.io"
 PUBLIC_SITE_PATH_PREFIX = "/devtools"
 SQUARE_API_VERSION = "2024-10-17"
-FULFILL_FROM_EMAIL = "REPLACE_WITH_VERIFIED_RESEND_SENDER"
+FULFILL_FROM_EMAIL = "fulfill@stratumsatoshi.com"
 FULFILL_TO_OVERRIDE_EMAIL = ""
