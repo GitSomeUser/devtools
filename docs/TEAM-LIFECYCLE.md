@@ -5,7 +5,7 @@ This is the **purpose framing** for work that started in the **Overnight Diary**
 ## Three phases
 
 ### 1) Overnight Diary (experiments)
-- **What:** Fast ideas, drafts, landing copy, Square tiers, distribution drafts under `~/clawd/overnight/`.
+- **What:** Fast ideas, drafts, landing copy, Square tiers; runner + trace in `~/clawd/overnight/` (charter `~/clawd/OVERNIGHT_PURPOSE.md`).
 - **Goal:** Learn what is **sellable** and **ship-shaped**, not perfect.
 - **Exit:** Good SKUs are **curated** into the public library (**`/pipeline/`** on this repo).
 
@@ -29,6 +29,7 @@ This is the **purpose framing** for work that started in the **Overnight Diary**
 | Location | Role |
 |----------|------|
 | `https://gitsomeuser.github.io/devtools/pipeline/` | Public **curated micro-offers** library (fed by internal “Possible Pipeline” phase) |
-| `~/clawd/overnight/` | Overnight experiment trace (diary, drafts) |
+| `~/clawd/overnight/` | Overnight runner + `diary.md` |
+| `~/clawd/paid-deliverables/` | Private paid markdown sources (not public repo) |
 | `~/clawd/team-purpose.md` | Local pointer to this lifecycle + phases |
 | `payment-links.json` | Tiers + SKUs (`amount_cents`, names); Worker + Pages share this file |

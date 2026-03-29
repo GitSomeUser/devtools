@@ -1,6 +1,6 @@
 # Devtools — income automation
 
-**Scope:** `GitSomeUser/devtools` on GitHub Pages. Overnight / Clawd may reference this repo; charter: `~/clawd/overnight/OVERNIGHT_PURPOSE.md`.
+**Scope:** `GitSomeUser/devtools` on GitHub Pages. Overnight / Clawd may reference this repo; charter: `~/clawd/OVERNIGHT_PURPOSE.md`.
 
 ## Rails
 
@@ -16,7 +16,7 @@ If `checkout_bridge_base_url` is empty, tier links still work but **shared-price
 
 ## Fulfillment
 
-Email as soon as Square **COMPLETED**. SKU from payment note + webhook. Attachments from KV `product:<sku>`; source files stay private (e.g. `~/clawd/overnight/`).
+Email as soon as Square **COMPLETED**. SKU from payment note + webhook. Attachments from KV `product:<sku>`; source files stay private (e.g. `~/clawd/paid-deliverables/`).
 
 ## Lifecycle copy
 
