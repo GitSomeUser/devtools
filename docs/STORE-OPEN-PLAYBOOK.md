@@ -1,5 +1,7 @@
 # Store open — lean checklist
 
+**Full agent SOP:** `docs/PAID-PRODUCT-LAUNCH-AUTOMATION.md`
+
 **Architecture:** `docs/SQUARE-FULFILLMENT.md` · **Worker deploy:** `fulfillment-bridge/README.md`
 
 ## Flow (one line)
@@ -42,6 +44,84 @@ GitHub Pages · Cloudflare Worker + KV · Square app + Location ID · Domain ver
 | `GET /pay?sku=bad` | `400` |
 | `POST /webhook` (no sig) | `403` |
 | Replay webhook | No duplicate email if `fulfilled:<id>` set |
+
+## Reusable launch checklist
+
+Use this when cloning the rail for a new paid product.
+
+### Public side
+
+1. Pick the public sales surface:
+   - add a slot on `/pipeline/`
+   - create a standalone page like `/commits/` or `/ship-kit/`
+2. Write the public promise:
+   - what it is
+   - what the buyer gets
+   - how fast fulfillment happens
+3. Add one CTA with:
+   - `data-checkout-sku="<slug>"`
+   - fallback `href` to the matching tier URL
+4. Keep only preview/sample material public.
+
+### Private side
+
+1. Add the SKU to `payment-links.json`.
+2. Upload the paid body to KV as `product:<slug>`.
+3. Confirm Worker secrets/vars are present.
+4. Redeploy the Worker after SKU changes.
+
+### Provider side
+
+1. Square webhook still points to the current Worker URL.
+2. Square redirect allowlist includes the return page.
+3. Resend sender is verified.
+4. Optional but recommended: store Resend delivery events later for bounce/complaint handling.
+
+## Real `$1` walkthrough — `commit-copy-deck`
+
+### Public shop
+
+- Catalog page: `/pipeline/`
+- Product page: `/commits/`
+- Public CTA on both pages: `data-checkout-sku="commit-copy-deck"`
+
+### Private shop
+
+- Public config maps `commit-copy-deck` to:
+  - tier `usd_1`
+  - amount `100`
+  - line name `Commit Copy Deck`
+- Private payload lives in KV under `product:commit-copy-deck`
+
+### Payment
+
+1. Buyer clicks the `$1` CTA.
+2. `checkout-resolve.js` rewrites the link to Worker `/pay`.
+3. Worker creates a fresh Square checkout for the exact SKU.
+4. Worker stamps `devtools:sku=commit-copy-deck` into `payment_note`.
+5. Buyer pays on Square-hosted checkout.
+
+### Confirmation
+
+1. Square confirms payment and sends `payment.updated`.
+2. Worker verifies the signature and checks payment status.
+3. Worker extracts the slug from `payment_note`.
+
+### Fulfillment
+
+1. Worker fetches `product:commit-copy-deck`.
+2. Worker sends the fulfillment email via Resend.
+3. Worker writes `fulfilled:<payment_id>` only after send succeeds.
+4. Duplicate webhook delivery does not duplicate customer fulfillment.
+
+### Recreate this for the next product
+
+1. Create the public page or catalog entry.
+2. Create the SKU entry.
+3. Upload the private payload.
+4. Deploy Worker.
+5. Run `node scripts/verify-skus.mjs`.
+6. Test the lowest price path once before public launch.
 
 **Never** commit Square tokens or Resend keys.
 

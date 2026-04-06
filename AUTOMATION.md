@@ -10,7 +10,7 @@
 | `js/checkout-resolve.js` | Worker `/pay` when bridge set; else static tier URL |
 | `fulfillment-bridge/` | `GET /pay`, `POST /webhook`, `GET /health` |
 
-**How it works:** `docs/SQUARE-FULFILLMENT.md` · **Repeatable ops:** `docs/STORE-OPEN-PLAYBOOK.md`
+**How it works:** `docs/SQUARE-FULFILLMENT.md` · **Repeatable ops:** `docs/STORE-OPEN-PLAYBOOK.md` · **Agent SOP (new product → prod):** `docs/PAID-PRODUCT-LAUNCH-AUTOMATION.md`
 
 If `checkout_bridge_base_url` is empty, tier links still work but **shared-price products are ambiguous** in Square—run the bridge in production.
 

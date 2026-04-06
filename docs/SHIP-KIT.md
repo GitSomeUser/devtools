@@ -15,6 +15,8 @@
 
 **SKU-aware checkout:** set `checkout_bridge_base_url` + `data-checkout-sku` — `docs/SQUARE-FULFILLMENT.md`.
 
+**Automate new products:** `docs/PAID-PRODUCT-LAUNCH-AUTOMATION.md`.
+
 ## Hero pattern
 
 One `<a>` to Square (or `data-checkout-sku` + tier fallback), one fine-print line on receipt + fulfillment.
