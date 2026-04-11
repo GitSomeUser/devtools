@@ -17,20 +17,25 @@
     .card-position { font-size: 0.7rem; color: #6a5a4a; text-transform: uppercase; letter-spacing: 0.15em; }
     .sample { background: #111120; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #2a2a3e; }
     .sample-label { font-size: 0.75rem; color: #6a5a4a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    .sample-card { margin-bottom: 1rem; }
-    .sample-card-name { color: #c9a227; font-size: 0.9rem; }
-    .sample-card-pos { color: #6a5a4a; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
-    .sample-interp { color: #a09080; font-size: 0.9rem; margin-top: 0.3rem; font-style: italic; }
+    .your-reading { background: #111120; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #c9a227; display: none; }
+    .your-reading .reading-label { font-size: 0.75rem; color: #c9a227; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .reading-card { margin-bottom: 1.2rem; }
+    .reading-card-name { color: #c9a227; font-size: 0.9rem; }
+    .reading-card-pos { color: #6a5a4a; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .reading-interp { color: #c0b090; font-size: 0.9rem; margin-top: 0.3rem; font-style: italic; }
+    .seed-line { font-size: 0.65rem; color: #4a3a2a; word-break: break-all; margin-top: 1rem; }
     .how { background: #111120; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #2a2a3e; }
     .how h2 { color: #c9a227; font-size: 1rem; margin-top: 0; }
     .how ol { margin: 0; padding-left: 1.5rem; }
     .how li { margin-bottom: 0.5rem; }
     .cta-wrap { text-align: center; margin: 2rem 0; }
-    .cta { display: inline-block; background: #c9a227; color: #0a0a0f; padding: 1rem 2.5rem; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
-    .cta:hover { background: #e0b830; }
+    .cta-btn { display: inline-block; background: #c9a227; color: #0a0a0f; padding: 1rem 2.5rem; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; }
+    .cta-btn:hover { background: #e0b830; }
+    .cta-btn:disabled { background: #6a5a3a; cursor: not-allowed; }
     .delivery-note { text-align: center; color: #6a5a4a; font-size: 0.85rem; margin-top: 1rem; }
     .subscribe-note { text-align: center; color: #6a5a4a; font-size: 0.85rem; margin-top: 2rem; }
     .footer { text-align: center; margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #2a2a3e; color: #5a4a3a; font-size: 0.75rem; }
+    .slants-used { font-size: 0.7rem; color: #5a4a3a; text-align: center; margin-top: 0.5rem; }
   </style>
 </head>
 <body>
@@ -41,11 +46,11 @@
 <p class="subtitle">The ledger does not lie. Your fate is written in the hash.</p>
 
 <div class="tagline">
-  Your Bitcoin transaction hash becomes your tarot reading.<br>
-  <strong>hash = destiny</strong>
+  Your hash becomes your tarot reading — generated before you pay.<br>
+  <strong>seed = destiny</strong>
 </div>
 
-<div class="sample">
+<div class="sample" id="sample-reading">
   <div class="sample-label">Sample Reading</div>
 
   <div class="sample-card">
@@ -67,28 +72,153 @@
   </div>
 </div>
 
+<div class="your-reading" id="your-reading">
+  <div class="reading-label">Your Reading — Generated from Your Hash</div>
+  <div id="reading-cards"></div>
+  <div class="seed-line" id="seed-display"></div>
+</div>
+
 <div class="how">
   <h2>How it works</h2>
   <ol>
-    <li>Click below to pay via Square — fast and secure.</li>
-    <li>After payment, we'll email you a short form to share what's on your mind (optional — makes the reading more personal).</li>
-    <li>Within 24 hours, your 3-card Bitcoin tarot reading arrives by email — Past, Present, Future, with full interpretations.</li>
+    <li>Click below — your reading is <strong>generated instantly</strong> from a unique hash.</li>
+    <li>Pay $3 to confirm — your reading is locked to your hash.</li>
+    <li>Delivered by email within minutes, plus a personal reply option to go deeper.</li>
   </ol>
 </div>
 
 <div class="cta-wrap">
-  <a class="cta" data-checkout-sku="tarot-reading" href="https://square.link/u/dbNxotcN">Pay $3 · Get Your Reading</a>
+  <button class="cta-btn" id="generate-btn" onclick="generateAndPay()">Pay $3 · Generate My Reading</button>
+  <div class="delivery-note" id="delivery-note" style="display:none;">
+    Your reading is ready above — now pay to unlock it.
+  </div>
 </div>
 
-<p class="delivery-note">Delivered by email within 24 hours of payment confirmation.<br>Square sends your payment receipt separately.</p>
-
-<div class="subscribe-note">Already had a reading?<br><a data-checkout-sku="tarot-subscribe" href="https://square.link/u/vrnZ4R19" style="color:#c9a227">Subscribe for more &rarr;</a></div>
+<div class="subscribe-note">
+  Monthly readings? Subscribe and get a new spread every 1st of the month.<br>
+  <a data-checkout-sku="tarot-subscribe" href="#" style="color: #c9a227;">→ Subscribe for $15/month</a>
+</div>
 
 <div class="footer">
-  &#9888; For entertainment purposes only. Not financial advice. Not a substitute for professional guidance.<br>
-  Crypto Tarot of the Chain &mdash; powered by devtools
+  For entertainment purposes only. Not financial advice.<br>
+  🕯️ Crypto Tarot of the Chain — powered by devtools
 </div>
 
-<script src="../../js/checkout-resolve.js" defer></script>
+<script>
+var MAJOR_ARCANA = [
+  { name: "The Genesis Block",     upright: "Beginnings, creation, potential. Something new is being mined into existence.",                          reversed: "A false start, an idea that never finds its chain. Delays before launch." },
+  { name: "The Oracle",            upright: "Hidden knowledge revealed. A signal emerges from noise.",                                                    reversed: "Misdirection, noise masquerading as truth. Question what seems obvious." },
+  { name: "The Empress",           upright: "Abundance, fertility, growth. The mempool is full and fees are low.",                                      reversed: "Block bloat, information overload. Not every signal deserves propagation." },
+  { name: "The Emperor",           upright: "Structure, authority, control. The protocol rules are set.",                                              reversed: "Centralization risk, overreach. Someone is trying to change the consensus." },
+  { name: "The Hierophant",        upright: "Tradition, guidance, orthodoxy. The old way still holds.",                                                  reversed: "A hard fork is coming. The establishment will resist." },
+  { name: "The Lovers",           upright: "Union, choice, alignment. Two paths converge — take both or choose.",                                        reversed: "A chain split, incompatible visions. The choice is painful either way." },
+  { name: "The Chariot",           upright: "Willpower, determination, victory. The hash rate surges forward.",                                          reversed: "Reorg. What seemed won can be undone in an instant." },
+  { name: "Strength",             upright: "Courage, patience, inner power. The hashrate doesn't rush — it persists.",                               reversed: "Weak hands. Capitulation is near. Hold or fold — but know why." },
+  { name: "The Hermit",           upright: "Solitude, reflection, withdrawal. Sometimes the best block is no block.",                                  reversed: "Isolation without wisdom. Being offline when you needed to be online." },
+  { name: "The Wheel of Fortune",  upright: "Cycles, luck, change. The difficulty adjustment is always coming.",                                       reversed: "Bad luck, a downtrend confirmed. The cycle has turned — respect it." },
+  { name: "Justice",              upright: "Truth, cause and effect, karma. Every tx leaves a trace on-chain.",                                        reversed: "Unfair outcome, lack of accountability. Not all justice is visible." },
+  { name: "The Hanged Man",       upright: "Pause, surrender, new perspective. Being stuck in a mempool has its uses.",                               reversed: "Forced delay, the orphan that wasn't your fault." },
+  { name: "Death",                upright: "Endings, transformation, purge. The old UTXO set is being pruned.",                                      reversed: "Resistance to change, fear of the inevitable. Not all endings are bad." },
+  { name: "The Thrawn Token",      upright: "Choice between paths, signals, crossroads. Mempool congestion ahead.",                                    reversed: "Split decision, neither path is cheap. Wait for the next block." },
+  { name: "The Block Clock",       upright: "The ledger has always moved in cycles. What felt like delay was sequence.",                               reversed: "Bad timing, a window that closed. The clock wasn't on your side." },
+  { name: "The Whale",            upright: "Accumulation, market-moving force. Someone big just moved.",                                               reversed: "Distribution, a top signal. The whale is selling into your optimism." },
+  { name: "The Lightning",         upright: "Fast transactions, sudden insight, speed. The invoice is open.",                                          reversed: "A failed HTLC, a channel that won't open. Friction in the network." },
+  { name: "The Moon",             upright: "Illusion, subconscious, fear. What looks like a win may be a mirror.",                                     reversed: "Deep waters, clarity from the chart. The shadows have been hiding something real." },
+  { name: "The Sun",              upright: "Joy, success, vitality. ATH energy. Everything is aligning.",                                           reversed: "A local top. Too much euphoria too fast. Stay grounded." },
+  { name: "The Star",             upright: "Hope, renewal, faith. The chart looks green again.",                                                       reversed: "A dead cat bounce. Hope is real — but so is the resistance ahead." },
+  { name: "Judgement",            upright: "Reflection, reckoning, awakening. The halving has arrived.",                                              reversed: "Self-doubt, missed call. The market is grading your thesis." },
+  { name: "The HODLer",           upright: "Restlessness stirs within you. The waiting has grown heavy. Something wants to move.",                      reversed: "The waiting IS the lesson. Sometimes the strongest signal is to do nothing." },
+];
+
+var SLANTS = [
+  { name: "Cyberpunk",    prefix: "Red⚡️",  style: "Neon-lit and sharp-edged. The chain never sleeps." },
+  { name: "Classical",    prefix: "Candle", style: "In the tradition of the old mystics, written in code as much as ink." },
+  { name: "Meme Culture", prefix: "Skull",  style: "Probably nothing. But also — maybe everything." },
+  { name: "Doomer",       prefix: "Dark",   style: "The chart is a mirror. The question is whether you're ready to look." },
+];
+
+function hexToNum(hex) {
+  var n = 0;
+  for (var i = 0; i < hex.length; i++) { n = (n * 16 + parseInt(hex[i], 16)) >>> 0; }
+  return n;
+}
+
+function sliceHex(hex, start, len) { return hex.slice(start, start + len); }
+
+function generateReading(seed) {
+  var cleanSeed = (seed || '').replace(/[^a-fA-F0-9]/g, '').slice(0, 64) || '0';
+  var hash = cleanSeed.padEnd(64, '0');
+  var n0 = hexToNum(sliceHex(hash, 0, 6));
+  var n1 = hexToNum(sliceHex(hash, 6, 6));
+  var n2 = hexToNum(sliceHex(hash, 12, 6));
+  var c0 = n0 % 22;
+  var c1 = n1 % 22;
+  var c2 = n2 % 22;
+  var rev0 = ((n0 >> 16) % 2) === 1;
+  var rev1 = ((n1 >> 16) % 2) === 1;
+  var rev2 = ((n2 >> 16) % 2) === 1;
+  var slantIdx = hexToNum(sliceHex(hash, 18, 4)) % SLANTS.length;
+  var slant = SLANTS[slantIdx];
+  var spread = [
+    { position: "PAST",    card: MAJOR_ARCANA[c0], reversed: rev0 },
+    { position: "PRESENT",  card: MAJOR_ARCANA[c1], reversed: rev1 },
+    { position: "FUTURE",  card: MAJOR_ARCANA[c2], reversed: rev2 },
+  ];
+  return { spread: spread, slant: slant, hash: hash, cleanSeed: cleanSeed };
+}
+
+function generateSeed() {
+  var arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
+var pendingSeed = null;
+
+function generateAndPay() {
+  if (!pendingSeed) {
+    // Step 1: Generate and preview
+    var btn = document.getElementById('generate-btn');
+    btn.textContent = 'Generating...';
+    btn.disabled = true;
+
+    pendingSeed = generateSeed();
+    var reading = generateReading(pendingSeed);
+
+    // Hide sample, show your reading
+    document.getElementById('sample-reading').style.display = 'none';
+    var yourDiv = document.getElementById('your-reading');
+    yourDiv.style.display = 'block';
+
+    var cardsHtml = '';
+    for (var i = 0; i < reading.spread.length; i++) {
+      var r = reading.spread[i];
+      var dir = r.reversed ? 'Reversed' : 'Upright';
+      var interp = r.reversed ? r.card.reversed : r.card.upright;
+      cardsHtml += '<div class="reading-card">' +
+        '<div class="reading-card-pos">' + r.position + '</div>' +
+        '<div class="reading-card-name">' + r.card.name + (r.reversed ? ' — Reversed' : '') + '</div>' +
+        '<div class="reading-interp">"' + interp + '"</div>' +
+        '</div>';
+    }
+    cardsHtml += '<div class="slants-used">Style: ' + reading.slant.name + ' — ' + reading.slant.style + '</div>';
+    document.getElementById('reading-cards').innerHTML = cardsHtml;
+    document.getElementById('seed-display').textContent = 'hash: ' + reading.cleanSeed.slice(0, 16) + '...';
+
+    // Now enable pay
+    btn.textContent = 'Pay $3 to Unlock · ' + reading.slant.prefix;
+    btn.disabled = false;
+    btn.dataset.ready = 'true';
+    document.getElementById('delivery-note').style.display = 'block';
+  } else {
+    // Step 2: Pay with seed
+    var returnPath = location.pathname + location.search;
+    var bridgeBase = 'https://devtools-square-bridge.stratumsatoshi.workers.dev';
+    var payUrl = bridgeBase + '/pay?sku=tarot-reading&seed=' + encodeURIComponent(pendingSeed) + '&return_path=' + encodeURIComponent(returnPath);
+    location.href = payUrl;
+  }
+}
+</script>
+
 </body>
 </html>

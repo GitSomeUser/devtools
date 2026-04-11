@@ -4,6 +4,7 @@
  * Canonical money + line names: repo-root payment-links.json (Square-friendly pointer file).
  */
 import paymentLinks from '../../payment-links.json';
+import { generateReading, renderReadingEmail } from './tarot-engine.mjs';
 
 const NOTE_PREFIX = paymentLinks.payment_note_prefix || 'devtools:sku=';
 const DEFAULT_CCY = paymentLinks.currency || 'USD';
@@ -63,6 +64,12 @@ function extractSkuFromPaymentNote(note) {
   if (idx === -1) return null;
   const rest = note.slice(idx + NOTE_PREFIX.length);
   const m = rest.match(/^([a-z0-9-]+)/i);
+  return m ? m[1].toLowerCase() : null;
+}
+
+function extractSeedFromPaymentNote(note) {
+  if (!note || typeof note !== 'string') return null;
+  const m = note.match(/seed=([a-fA-F0-9]{8,64})/);
   return m ? m[1].toLowerCase() : null;
 }
 
@@ -152,7 +159,7 @@ async function loadDeliverableBody(env, sku) {
   return store.get(`product:${sku}`);
 }
 
-async function buildFulfillmentEmail(payment, sku, env) {
+async function buildFulfillmentEmail(payment, sku, env, seed) {
   const def = paymentLinks.skus?.[sku];
   const product = def?.square_line_name || sku;
   const to = env.FULFILL_TO_OVERRIDE_EMAIL || payment.buyer_email_address || '';
@@ -161,6 +168,23 @@ async function buildFulfillmentEmail(payment, sku, env) {
   const money = `${(amount / 100).toFixed(2)} ${currency}`;
   const deliverableUrl = deliverableUrlForSku(sku, env);
   const subject = `Your ${product} purchase (${money})`;
+
+  // tarot-reading: generate a dynamic reading from the seed
+  if (sku === 'tarot-reading' && seed) {
+    const reading = generateReading(seed);
+    const text = renderReadingEmail(reading);
+    return {
+      to,
+      subject: `Your Crypto Tarot Reading (${money})`,
+      text,
+      attachments: undefined,
+      deliverableUrl,
+      product,
+      money,
+      hasBody: true,
+    };
+  }
+
   const bodyMd = await loadDeliverableBody(env, sku);
   const hasBody = !!(bodyMd && bodyMd.trim());
 
@@ -230,8 +254,11 @@ export default {
       }
 
       const returnPath = url.searchParams.get('return_path') || '';
+      const seed = (url.searchParams.get('seed') || '').toLowerCase().trim();
       const redirect = normalizeReturnUrl(request, returnPath, env);
-      const paymentNote = `${NOTE_PREFIX}${sku}`.slice(0, 500);
+      const paymentNote = seed
+        ? `${NOTE_PREFIX}${sku}:seed=${seed}`.slice(0, 500)
+        : `${NOTE_PREFIX}${sku}`.slice(0, 500);
       const idempotencyKey = crypto.randomUUID();
       const ccy = def.currency || DEFAULT_CCY;
 
@@ -302,7 +329,9 @@ export default {
 
       const type = payload.type || payload.event_type || '';
       const payment = firstPaymentObject(payload);
-      const sku = extractSkuFromPaymentNote(payment?.note || '');
+      const note = payment?.note || '';
+      const sku = extractSkuFromPaymentNote(note);
+      const seed = extractSeedFromPaymentNote(note);
       const status = payment?.status || '';
 
       const summary = {
@@ -317,7 +346,7 @@ export default {
       if (sku && payment?.id && status === 'COMPLETED') {
         const alreadyDone = await seenPaymentBefore(env, payment.id);
         if (!alreadyDone) {
-          const email = await buildFulfillmentEmail(payment, sku, env);
+          const email = await buildFulfillmentEmail(payment, sku, env, seed);
           const result = await sendFulfillmentEmail(env, email);
           if (result.sent) {
             await markPaymentSeen(env, payment.id, sku);
