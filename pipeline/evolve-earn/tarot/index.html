@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto Tarot of the Chain — Bitcoin Destiny Reading</title>
+  <title>Crypto Tarot — Bitcoin Destiny Reading</title>
   <style>
     body { font-family: Georgia, serif; max-width: 680px; margin: 0 auto; padding: 2rem; background: #0a0a0f; color: #e8e0d0; line-height: 1.7; }
     .disclaimer { background: #1a1a2e; border: 1px solid #c9a227; border-radius: 4px; padding: 1rem; margin-bottom: 2rem; font-size: 0.85rem; color: #a09080; text-align: center; }
@@ -42,12 +42,12 @@
 
 <div class="disclaimer">&#9888; For entertainment purposes only. Not financial advice. Not a substitute for professional guidance.</div>
 
-<h1>🕯️ Crypto Tarot of the Chain</h1>
-<p class="subtitle">The ledger does not lie. Your fate is written in the hash.</p>
+<h1>🕯️ Crypto Tarot</h1>
+<p class="subtitle">Your browser fingerprint + arrival moment. Hash = destiny.</p>
 
 <div class="tagline">
-  Your hash becomes your tarot reading — generated before you pay.<br>
-  <strong>seed = destiny</strong>
+  Your unique browser fingerprint + timestamp becomes your tarot reading — generated before you pay.<br>
+  <strong>your_browser + timestamp = seed = destiny</strong>
 </div>
 
 <div class="sample" id="sample-reading">
@@ -81,7 +81,7 @@
 <div class="how">
   <h2>How it works</h2>
   <ol>
-    <li>Click below — your reading is <strong>generated instantly</strong> from a unique hash.</li>
+    <li>Click below — your unique browser fingerprint + timestamp is hashed to generate your reading.</li>
     <li>Pay $3 to confirm — your reading is locked to your hash.</li>
     <li>Delivered by email within minutes, plus a personal reply option to go deeper.</li>
   </ol>
@@ -101,7 +101,7 @@
 
 <div class="footer">
   For entertainment purposes only. Not financial advice.<br>
-  🕯️ Crypto Tarot of the Chain — powered by devtools
+  🕯️ Crypto Tarot — powered by devtools
 </div>
 
 <script>
@@ -168,48 +168,55 @@ function generateReading(seed) {
 }
 
 function generateSeed() {
-  var arr = new Uint8Array(32);
-  crypto.getRandomValues(arr);
-  return Array.from(arr, function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+  // Fingerprint: browser userAgent + arrival timestamp
+  var meta = (navigator.userAgent || '') + '|' + Date.now() + '|' + Math.random();
+  var enc = new TextEncoder();
+  return crypto.subtle.digest('SHA-256', enc.encode(meta)).then(function(buf) {
+    return Array.from(new Uint8Array(buf), function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+  });
 }
 
 var pendingSeed = null;
 
 function generateAndPay() {
   if (!pendingSeed) {
-    // Step 1: Generate and preview
+    // Step 1: Generate and preview (async — needs SHA-256 hash of fingerprint+timestamp)
     var btn = document.getElementById('generate-btn');
     btn.textContent = 'Generating...';
     btn.disabled = true;
 
-    pendingSeed = generateSeed();
-    var reading = generateReading(pendingSeed);
+    generateSeed().then(function(seed) {
+      pendingSeed = seed;
+      var reading = generateReading(pendingSeed);
 
-    // Hide sample, show your reading
-    document.getElementById('sample-reading').style.display = 'none';
-    var yourDiv = document.getElementById('your-reading');
-    yourDiv.style.display = 'block';
+      // Hide sample, show your reading
+      document.getElementById('sample-reading').style.display = 'none';
+      var yourDiv = document.getElementById('your-reading');
+      yourDiv.style.display = 'block';
 
-    var cardsHtml = '';
-    for (var i = 0; i < reading.spread.length; i++) {
-      var r = reading.spread[i];
-      var dir = r.reversed ? 'Reversed' : 'Upright';
-      var interp = r.reversed ? r.card.reversed : r.card.upright;
-      cardsHtml += '<div class="reading-card">' +
-        '<div class="reading-card-pos">' + r.position + '</div>' +
-        '<div class="reading-card-name">' + r.card.name + (r.reversed ? ' — Reversed' : '') + '</div>' +
-        '<div class="reading-interp">"' + interp + '"</div>' +
-        '</div>';
-    }
-    cardsHtml += '<div class="slants-used">Style: ' + reading.slant.name + ' — ' + reading.slant.style + '</div>';
-    document.getElementById('reading-cards').innerHTML = cardsHtml;
-    document.getElementById('seed-display').textContent = 'hash: ' + reading.cleanSeed.slice(0, 16) + '...';
+      var cardsHtml = '';
+      for (var i = 0; i < reading.spread.length; i++) {
+        var r = reading.spread[i];
+        var interp = r.reversed ? r.card.reversed : r.card.upright;
+        cardsHtml += '<div class="reading-card">' +
+          '<div class="reading-card-pos">' + r.position + '</div>' +
+          '<div class="reading-card-name">' + r.card.name + (r.reversed ? ' — Reversed' : '') + '</div>' +
+          '<div class="reading-interp">"' + interp + '"</div>' +
+          '</div>';
+      }
+      cardsHtml += '<div class="slants-used">Style: ' + reading.slant.name + ' — ' + reading.slant.style + '</div>';
+      document.getElementById('reading-cards').innerHTML = cardsHtml;
+      document.getElementById('seed-display').textContent = 'hash: ' + reading.cleanSeed.slice(0, 16) + '...';
 
-    // Now enable pay
-    btn.textContent = 'Pay $3 to Unlock · ' + reading.slant.prefix;
-    btn.disabled = false;
-    btn.dataset.ready = 'true';
-    document.getElementById('delivery-note').style.display = 'block';
+      // Now enable pay
+      btn.textContent = 'Pay $3 to Unlock';
+      btn.disabled = false;
+      document.getElementById('delivery-note').style.display = 'block';
+    }).catch(function(e) {
+      btn.textContent = 'Error — try again';
+      btn.disabled = false;
+      console.warn(e);
+    });
   } else {
     // Step 2: Pay with seed
     var returnPath = location.pathname + location.search;

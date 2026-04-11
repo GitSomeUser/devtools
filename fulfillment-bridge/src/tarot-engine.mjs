@@ -80,7 +80,7 @@ export function renderReadingEmail(reading) {
   const { spread, slant, cleanSeed } = reading;
   const lines = [];
 
-  lines.push(`${slant.prefix} **CRYPTO TAROT OF THE CHAIN** ${slant.prefix}`);
+  lines.push(`${slant.prefix} **CRYPTO TAROT** ${slant.prefix}`);
   lines.push("");
   lines.push("_For entertainment purposes only. Not financial advice._");
   lines.push("");
@@ -114,7 +114,7 @@ export function renderReadingEmail(reading) {
   lines.push("_For entertainment purposes only. Not financial advice._");
   lines.push("_Not a substitute for professional guidance._");
   lines.push("");
-  lines.push("🕯️ Crypto Tarot of the Chain — powered by devtools");
+  lines.push("🕯️ Crypto Tarot — powered by devtools");
 
   return lines.join("\n");
 }
