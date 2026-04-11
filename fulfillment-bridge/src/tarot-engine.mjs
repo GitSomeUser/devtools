@@ -86,7 +86,7 @@ export function renderReadingEmail(reading) {
   lines.push("");
   lines.push("━━━━━━━━━━━━━━━━━━━━━━━━");
   lines.push("");
-  lines.push("**YOUR 3-CARD BITCOIN READING**");
+  lines.push("**YOUR 3-CARD READING**");
   lines.push("");
   lines.push("━━━━━━━━━━━━━━━━━━━━━━━━");
   lines.push("");
@@ -106,7 +106,8 @@ export function renderReadingEmail(reading) {
   lines.push("Reply with what's on your mind — a question, a situation, a hope.");
   lines.push("I'll weave it into your next 3 cards.");
   lines.push("");
-  lines.push("Already had a reading? Subscribe for monthly spreads.");
+  lines.push("Already had a reading? Want to do this more often?");
+  lines.push("Subscribe for daily or weekly readings.");
   lines.push("👉 https://gitsomeuser.github.io/devtools/pipeline/evolve-earn/tarot/?thanks=1");
   lines.push("");
   lines.push("━━━━━━━━━━━━━━━━━━━━━━━━");
